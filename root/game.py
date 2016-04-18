@@ -16,13 +16,19 @@ from astar import *
 def main():
 
 
-	# Create a 2 dimensional array. A two dimensional
-	# array is simply a list of lists.
+	#create the search space to look through
 	searchSpace = []
-	for i in range(10):
-		for j in range(10):
-			n = Node(i, j)
+	for x in range(10):
+		for y in range(10):
+			n = Node(x, y)
+			#x goes right
+			#y goes down
+			unwalkable = True if (x >= 5 and x <= 6 and y >= 5 and y <= 8) else False
+			print("x =:{mx} y=: {my} | pos =: {position}".format(mx = x, my = y, position = n.pos))
+			
+			n.setWalk(unwalkable)
 			searchSpace.append(n)
+			
 
 	# Initialize pygame
 	pygame.init()

@@ -9,6 +9,8 @@ class Node:
 		self.left = (self.margin + self.width) *  x + self.margin
 		self.top = (self.margin + self.height) *  y + self.margin
 		self.walkable = True
+		self.pos = (x, self.height - y)
+		
 
 	def draw(self, screen, color):
 		margin = self.margin
