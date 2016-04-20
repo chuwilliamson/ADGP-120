@@ -12,11 +12,12 @@ window = 0											   # glut window number
 width, height = 500, 400							   # window size
 
 class Node:
-	def __init__(self, x, y, width, height, parent):
+	def __init__(self, x, y, width, height):
 		self.x = x
 		self.y = y
 		self.width = width
 		self.height = height
+		self.parent = None
 	def draw(self):
 		glColor3f(0.0, 0.0, 1.0)						   # set color to blue
 		glBegin(GL_QUADS)								   # start drawing a rectangle
@@ -28,7 +29,7 @@ class Node:
 		glColor3f(1.0, 0.0, 0.0)	
 		glBegin(GL_LINES)		
 		glVertex2f(self.x,self.y)
-		if(parent is None):
+		if(self.parent is None):
 			glVertex2f(height/2, width/2)
 		else:		
 			glVertex2f(parent.x, parent.y)
@@ -48,12 +49,10 @@ def draw():											   # ondraw is called all the time
 	glLoadIdentity()								   # reset position
 	refresh2d(width,height)
 	# ToDo draw rectangle
-	n1 =  Node(10, 10, 200, 100, None)
+	n1 =  Node(10, 10, 200, 100)
 	n1.draw()
-	n2 = Node(250,250, 100,50, n1)
+	n2 = Node(250, 250, 100, 50)
 	n2.draw()
-	#draw_rect(10, 10, 200, 100)						   # rect at (10, 10) with width 200, height 100	
-	#draw_line(10, 10, 210, 110)
 	
 	glutSwapBuffers()								   # important for double buffering
 
@@ -62,7 +61,7 @@ glutInit()											   # initialize glut
 glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
 glutInitWindowSize(width, height)					   # set window size
 glutInitWindowPosition(0, 0)						   # set window position
-window = glutCreateWindow("noobtuts.com")			   # create window with title
+window = glutCreateWindow("PyOpenGL")			                    # create window with title
 glutDisplayFunc(draw)								   # set draw function callback
 glutIdleFunc(draw)									   # draw all the time
 glutMainLoop()

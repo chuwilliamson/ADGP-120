@@ -8,14 +8,18 @@
 
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
-import pygame
+import math,pygame
 from astar import *
 
 
 
+def mag(a):
+	return math.sqrt(a[0]^2 + a[1]^2)
+	
 def main():
-
-
+	Red = (255,255,255)
+	Grn = (0,255,0)        
+	print("mag of 255,255", mag((255,255)))
 	#create the search space to look through
 	searchSpace = []
 	for x in range(10):
@@ -24,7 +28,7 @@ def main():
 			#x goes right
 			#y goes down
 			unwalkable = True if (x >= 5 and x <= 6 and y >= 5 and y <= 8) else False
-			print("x =:{mx} y=: {my} | pos =: {position}".format(mx = x, my = y, position = n.pos))
+			#print("x =:{mx} y=: {my} | pos =: {position}".format(mx = x, my = y, position = n.pos))
 			
 			n.setWalk(unwalkable)
 			searchSpace.append(n)
@@ -32,40 +36,38 @@ def main():
 
 	# Initialize pygame
 	pygame.init()
-
+	# Initialize fonts
+	pygame.font.init()
 	# Set the HEIGHT and WIDTH of the screen
-	WINDOW_SIZE = [255, 255]
-	screen = pygame.display.set_mode(WINDOW_SIZE)
+	screen_width = 1000
+	screen_height = 1000
+	# Set the screen
+	screen = pygame.display.set_mode([screen_width, screen_height])
 
 	# Set title of screen
 	pygame.display.set_caption("Astar")
 
-	# Loop until the user clicks the close button.
-	done = False
 
 	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
-
-
-
+	
+	 
+	Running = True
 	# -------- Main Program Loop -----------
-	while not done:
-		for event in pygame.event.get():  # User did something
-			if event.type == pygame.QUIT:  # If user clicked close
-				done = True	 # Flag that we are done so we exit this loop
-
-
-
-
-		# Set the screen background
-		screen.fill((0,0,0))
-
+	while Running:
+		clicked = (0,0)
+		for event in pygame.event.get():  # User did something			
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				clicked = pygame.mouse.get_pos()
+			if event.type == pygame.QUIT:
+				Running = False
+		
+		if(pygame.key.get_pressed()[pygame.K_ESCAPE]):
+			Running = False
+			
 		for i in searchSpace:
-			i.draw(screen, (255,255,255))
-
-		# Limit to 60 frames per second
-		clock.tick(60)
-
+			i.draw(screen, Red)
+		
 		# Go ahead and update the screen with what we've drawn.
 		pygame.display.flip()
 
