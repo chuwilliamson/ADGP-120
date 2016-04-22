@@ -17,33 +17,37 @@ def mag(a):
 	return math.sqrt(a[0]^2 + a[1]^2)
 	
 def main():
+	
 	Red = (255,255,255)
-	Grn = (0,255,0)        
+	Green = (0,255,0)     
+	Yellow = (255,255,0)	
 	print("mag of 255,255", mag((255,255)))
 	#create the search space to look through
-	searchSpace = []
-	for x in range(10):
-		for y in range(10):
+	mouse_listeners = []
+	search_space = []
+	for x in range(15):
+		for y in range(15):
 			n = Node(x, y)
 			#x goes right
 			#y goes down
-			unwalkable = True if (x >= 5 and x <= 6 and y >= 5 and y <= 8) else False
-			#print("x =:{mx} y=: {my} | pos =: {position}".format(mx = x, my = y, position = n.pos))
+			if (x >= 5 and x <= 6 and y >= 5 and y <= 8):
+				n.walkable = False
+				
+			mouse_listeners.append(n.onclick)
 			
-			n.setWalk(unwalkable)
-			searchSpace.append(n)
-			
+			search_space.append(n)
+		
 
 	# Initialize pygame
 	pygame.init()
 	# Initialize fonts
 	pygame.font.init()
 	# Set the HEIGHT and WIDTH of the screen
-	screen_width = 1000
-	screen_height = 1000
+	screen_width = 830
+	screen_height = 850
 	# Set the screen
 	screen = pygame.display.set_mode([screen_width, screen_height])
-
+	font = pygame.font.Font(None, 15)
 	# Set title of screen
 	pygame.display.set_caption("Astar")
 
@@ -51,25 +55,32 @@ def main():
 	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
 	
-	 
+
 	Running = True
 	# -------- Main Program Loop -----------
-	while Running:
-		clicked = (0,0)
+	while Running:		
+		search_space[5].color = Green
 		for event in pygame.event.get():  # User did something			
 			if event.type == pygame.MOUSEBUTTONDOWN:
-				clicked = pygame.mouse.get_pos()
+				for callback in mouse_listeners:
+					callback(pygame.mouse.get_pos())
+				
+				
 			if event.type == pygame.QUIT:
 				Running = False
 		
 		if(pygame.key.get_pressed()[pygame.K_ESCAPE]):
 			Running = False
 			
-		for i in searchSpace:
-			i.draw(screen, Red)
+		for i in search_space:
+			i.draw(screen, font)
+		print(clock.get_fps())
+		clock.tick(60)
+			
 		
 		# Go ahead and update the screen with what we've drawn.
 		pygame.display.flip()
+		
 
 	# Be IDLE friendly. If you forget this line, the program will 'hang'
 	# on exit.
