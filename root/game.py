@@ -11,7 +11,8 @@
 import math,pygame
 from astar import *
 
-
+true = True
+false = False
 white = (255,255,255)
 black = (0,0,0)
 green = (0,255,0)
@@ -37,7 +38,13 @@ def main():
 			#y goes down
 			if (x >= 5 and x <= 6 and y >= 5 and y <= 8):
 				n.walkable = False
-			if(x % 15 == 0 or y % 15 == (15 - 1) or x % 15 == 14 or y % 15 == 0):
+			
+			leftWall = true if x % 15 == 0 else false
+			rightWall = true if x % 15 == 15 - 1 else false
+			topWall = true if y % 15 == 0 else false
+			botWall = true if y % 15 == 15 - 1 else false
+			
+			if(leftWall or rightWall or topWall or botWall):
 				n.walkable = False
 				
 			mouse_listeners.append(n.onclick)
