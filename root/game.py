@@ -25,9 +25,11 @@ def main():
 	#create the search space to look through
 	mouse_listeners = []
 	search_space = []
+	id = 0
 	for x in range(15):
 		for y in range(15):
-			n = Node(x, y)
+		
+			n = Node(x, y, id)
 			#x goes right
 			#y goes down
 			if (x >= 5 and x <= 6 and y >= 5 and y <= 8):
@@ -36,6 +38,7 @@ def main():
 			mouse_listeners.append(n.onclick)
 			
 			search_space.append(n)
+			id+=1
 		
 
 	# Initialize pygame
@@ -54,12 +57,13 @@ def main():
 
 	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
-	
-
+	start = search_space[0]
+	goal = search_space[25]
+	Astar(search_space, start, goal )
 	Running = True
 	# -------- Main Program Loop -----------
 	while Running:		
-		search_space[5].color = Green
+		
 		for event in pygame.event.get():  # User did something			
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				for callback in mouse_listeners:

@@ -4,13 +4,13 @@ white = (255,255,255)
 black = (0,0,0)
 class Node(object):
 	
-	def __init__(self, x, y):		
+	def __init__(self, x, y, id):		
 		#MANUAL SIZE
 		
 		SIZE = 50
 		self.width = SIZE
 		self.height = SIZE
-		
+		self.id = id
 		self.x = (5 + self.width) * x + 5
 		self.y = (5 + self.height) * y + 5
 		self.pos = (self.width * x, self.height * y)		
@@ -51,7 +51,7 @@ class Node(object):
 		#create some text to go on the fill
 		
 		#info to display
-		info = str((self.x, self.y))
+		info = str((self.id))
 		#render the text
 		text = font.render(info, 1, (1, 1, 1))
 		#set it's position/parent
