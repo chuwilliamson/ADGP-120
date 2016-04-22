@@ -12,7 +12,10 @@ import math,pygame
 from astar import *
 
 
-
+white = (255,255,255)
+black = (0,0,0)
+green = (0,255,0)
+teal = (128, 128, 255)
 def mag(a):
 	return math.sqrt(a[0]^2 + a[1]^2)
 	
@@ -24,7 +27,7 @@ def main():
 	print("mag of 255,255", mag((255,255)))
 	#create the search space to look through
 	mouse_listeners = []
-	search_space = []
+	search_space = {}
 	id = 0
 	for x in range(15):
 		for y in range(15):
@@ -34,10 +37,12 @@ def main():
 			#y goes down
 			if (x >= 5 and x <= 6 and y >= 5 and y <= 8):
 				n.walkable = False
+			if(x % 15 == 0 or y % 15 == (15 - 1) or x % 15 == 14 or y % 15 == 0):
+				n.walkable = False
 				
 			mouse_listeners.append(n.onclick)
 			
-			search_space.append(n)
+			search_space[id] = n
 			id+=1
 		
 
@@ -57,8 +62,10 @@ def main():
 
 	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
-	start = search_space[0]
-	goal = search_space[25]
+	start = search_space[28]
+	start.color = teal 
+	goal = search_space[196]
+	goal.color = green
 	Astar(search_space, start, goal )
 	Running = True
 	# -------- Main Program Loop -----------
@@ -66,6 +73,9 @@ def main():
 		
 		for event in pygame.event.get():  # User did something			
 			if event.type == pygame.MOUSEBUTTONDOWN:
+				for i in search_space:
+					if not search_space[i].dirty:
+						search_space[i].color = white
 				for callback in mouse_listeners:
 					callback(pygame.mouse.get_pos())
 				
@@ -77,8 +87,8 @@ def main():
 			Running = False
 			
 		for i in search_space:
-			i.draw(screen, font)
-		print(clock.get_fps())
+			search_space[i].draw(screen, font)
+		
 		clock.tick(60)
 			
 		
