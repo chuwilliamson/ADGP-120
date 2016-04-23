@@ -20,6 +20,7 @@ white = (255,255,255)
 black = (0,0,0)
 green = (0,255,0)
 teal = (128, 128, 255)
+yellow = (255,255,0)
 #def mag(a):
 	#return math.sqrt(a[0]^2 + a[1]^2)
 	
@@ -53,15 +54,16 @@ def main():
 			
 			if(leftWall or rightWall or topWall or botWall):
 				n.walkable = False
-			rng = random.randint(0,ROWS * COLS)
-			if(id > rng /2):
-				n.walkable = False
+			
 			mouse_listeners.append(n.onclick)
 			
 			search_space[id] = n
 			id+=1
 		
-
+	for i in range(20):
+		rng = random.randint(0,(ROWS-1) * (COLS-1))			
+		search_space[rng].walkable = False
+			
 	# Initialize pygame
 	pygame.init()
 	# Initialize fonts
@@ -79,51 +81,73 @@ def main():
 	
 	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
-	start = search_space[28]
-	start.color = teal 
-	goal = search_space[196]
-	goal.color = green
 	
-	algo = Astar(search_space, start, goal)	
-	algo.Run()
+	
 	Running = True
-	
+	algo = None
+	start = None
+	goal = None
+	background = pygame.Surface(screen.get_size())
+	background = background.convert()
+	background.fill(black)
 	# -------- Main Program Loop -----------
 	while Running:		
 		
 		for event in pygame.event.get():  # User did something			
 			if event.type == pygame.MOUSEBUTTONDOWN:
-				for i in search_space:
-					if not search_space[i].dirty:
-						search_space[i].color = white
 				for callback in mouse_listeners:
-					cb = callback(pygame.mouse.get_pos())					
+					cb = callback(pygame.mouse.get_pos())	
 					if cb is not None:
-						cb.info()
-						if not cb.dirty:
-							start = goal
-							goal = cb
-							algo = None
-							algo = Astar(search_space, start, goal)
-							algo.Run()
-							for i in algo.PATH:
-								i._color = green					
-				
+						if event.button == 1: #left click					
+							print("left click")							
+							if(start is None):
+								print("must set start")
+								break
+
+							else:
+								print("goal set")
+								cb.info()						
+								goal = cb
+								goal._color = yellow
+								algo = Astar(search_space, start, goal)
+								algo.Run()
+								for i in algo.PATH:
+									pygame.time.wait(1)
+									i._color = green					
+						if event.button == 3: #clear screen
+							if algo: algo.Reset()
+							for i in search_space:
+								if not search_space[i].dirty:
+									search_space[i].color = white																
+							if not cb.dirty:
+								print("set start")
+								cb.info()
+								start = cb
+								start._color = teal
+								
+
 				
 			if event.type == pygame.QUIT:
 				Running = False
 		
 		if(pygame.key.get_pressed()[pygame.K_ESCAPE]):
 			Running = False
-			
+		screen.blit(background,(0,0))
 		for i in search_space:
 			search_space[i].draw(screen, font)
-		
+		for n in search_space:
+			i = search_space[n]
+			if(i.parent):		
+				parentmid = (i.parent.rect.centerx , i.parent.rect.centery)
+				selfmid = (i.rect.centerx, i.rect.centery)
+				pygame.draw.ellipse(screen, (100,25,255), selfmid, 5)
+				pygame.draw.aaline(screen, (100,25,255), selfmid, parentmid, 5)
+		pygame.display.flip()
 		clock.tick(60)
 			
 		
 		# Go ahead and update the screen with what we've drawn.
-		pygame.display.flip()
+		
 		
 
 	# Be IDLE friendly. If you forget this line, the program will 'hang'

@@ -1,4 +1,5 @@
 import math
+
 class Astar(object):
 	def __init__(self, SearchSpace, Start, Goal):
 		self.OPEN = []

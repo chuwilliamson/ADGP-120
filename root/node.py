@@ -84,6 +84,7 @@ class Node(object):
 	def draw(self, screen, font):		
 		if not self.walkable: 
 			self.color = (255,0,0)
+	
 		
 		#create some text to go on the fill
 		
@@ -99,17 +100,18 @@ class Node(object):
 		texthpos = ((self.x + self.width/2) + len(str(self.h)) + self.width/8, self.y + self.height - 10)
 		#center it
 		
-		
 		#draw the square
 		pygame.draw.rect(screen, self._color, self.rect)
-		#draw parents
-		if(self.parent):
-			pygame.draw.line(screen, (0,100,50), self.screenpos, self.parent.screenpos)
-		#screen.fill(self._color, self.rect)
-		#blit the text 
+		
 		screen.blit(textg, textgpos)
 		screen.blit(textf, textfpos)
 		screen.blit(texth, texthpos)
+		
+		
+		
+		
+		
+		
 		
 
 	def onclick(self, pos):	
