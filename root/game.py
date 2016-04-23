@@ -74,7 +74,7 @@ def main():
 	screen_height = ROWS * (pad[0] + HEIGHT) + pad[1]
 	# Set the screen
 	screen = pygame.display.set_mode([screen_width, screen_height])
-	font = pygame.font.Font(None, 15)
+	font = pygame.font.Font(None, 18)
 	# Set title of screen
 	pygame.display.set_caption("Astar")
 
@@ -87,25 +87,34 @@ def main():
 	algo = None
 	start = None
 	goal = None
+	init = False
 	background = pygame.Surface(screen.get_size())
 	background = background.convert()
 	background.fill(black)
 	# -------- Main Program Loop -----------
 	while Running:		
-		
+		if(pygame.key.get_pressed()[pygame.K_ESCAPE]):
+			Running = False
 		for event in pygame.event.get():  # User did something			
 			if event.type == pygame.MOUSEBUTTONDOWN:
+				
 				for callback in mouse_listeners:
 					cb = callback(pygame.mouse.get_pos())	
-					if cb is not None:
+					if cb:
 						if event.button == 1: #left click					
-							print("left click")							
+							print("left click")					
+							for i in search_space:
+								if not search_space[i].dirty:
+									search_space[i].color = white									
+							start._color = teal
+							init = True
 							if(start is None):
 								print("must set start")
 								break
 
 							else:
 								print("goal set")
+								
 								cb.info()						
 								goal = cb
 								goal._color = yellow
@@ -113,34 +122,37 @@ def main():
 								algo.Run()
 								for i in algo.PATH:
 									pygame.time.wait(1)
-									i._color = green					
+									if i is not start:
+										i._color = green					
 						if event.button == 3: #clear screen
+							init = False
 							if algo: algo.Reset()
 							for i in search_space:
 								if not search_space[i].dirty:
-									search_space[i].color = white																
+									search_space[i].color = white
+									
 							if not cb.dirty:
 								print("set start")
 								cb.info()
 								start = cb
 								start._color = teal
-								
-
-				
 			if event.type == pygame.QUIT:
 				Running = False
+				
 		
-		if(pygame.key.get_pressed()[pygame.K_ESCAPE]):
-			Running = False
+			
 		screen.blit(background,(0,0))
+		
 		for i in search_space:
-			search_space[i].draw(screen, font)
+			search_space[i].draw(screen, font, init)
+			
 		for n in search_space:
 			i = search_space[n]
-			if(i.parent):		
+			if i.parent:		
 				parentmid = (i.parent.rect.centerx , i.parent.rect.centery)
 				selfmid = (i.rect.centerx, i.rect.centery)
-				pygame.draw.ellipse(screen, (100,25,255), selfmid, 5)
+				newrect = i.rect.inflate(1-(i.width/2),1-(i.height/2))
+				pygame.draw.ellipse(screen, (100,25,255), newrect, 1)
 				pygame.draw.aaline(screen, (100,25,255), selfmid, parentmid, 5)
 		pygame.display.flip()
 		clock.tick(60)

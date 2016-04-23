@@ -81,39 +81,40 @@ class Node(object):
 		print("neighbors:", ids)
 		print("index: ", self.index)
 	
-	def draw(self, screen, font):		
-		if not self.walkable: 
+	def draw(self, screen, font, init = True):		
+		pygame.draw.rect(screen, self._color, self.rect)
+		if self.walkable:
+			#create some text to go on the fill
+			
+			#info to display
+			
+			#render the text
+			
+			textf = font.render("F= " + str(self.f), True, (1, 1, 1))
+			textg = font.render("G= " + str(self.g) + "H= " + str(self.h), True, (1, 1, 1))
+			#texth = font.render("h= " + str(self.h), True, (1, 1, 1))
+			#set it's position/parent
+			textfpos = (self.x, self.y) #top left
+			textgpos = (self.x, self.y + self.height - 10) #bot left		
+			#texthpos = ((self.x + self.width /2 ) + len("H= " + str(self.h))  , self.y + self.height - 10)
+			#center it
+			
+			#draw the square
+			if init:				
+				screen.blit(textf, textfpos)
+				screen.blit(textg, textgpos)
+			#	screen.blit(texth, texthpos)
+		else:			
 			self.color = (255,0,0)
+			
+		
+		
 	
 		
-		#create some text to go on the fill
-		
-		#info to display
-		
-		#render the text
-		textg = font.render(str(self.g), True, (1, 1, 1))
-		textf = font.render(str(self.f), True, (1, 1, 1))
-		texth = font.render(str(self.h), True, (1, 1, 1))
-		#set it's position/parent
-		textfpos = (self.x, self.y) #top left
-		textgpos = (self.x, self.y + self.height - 10) #bot left		
-		texthpos = ((self.x + self.width/2) + len(str(self.h)) + self.width/8, self.y + self.height - 10)
-		#center it
-		
-		#draw the square
-		pygame.draw.rect(screen, self._color, self.rect)
-		
-		screen.blit(textg, textgpos)
-		screen.blit(textf, textfpos)
-		screen.blit(texth, texthpos)
 		
 		
 		
-		
-		
-		
-		
-
+	
 	def onclick(self, pos):	
 		oldColor = self.color
 		newColor = (255,0,255)
@@ -125,9 +126,9 @@ class Node(object):
 		if(x > self.rect.left and x < self.rect.right and y >self.rect.top and y < self.rect.bottom):			
 			if not self.dirty: #if we didn't set it's color manual
 				self._color = newColor
-				for i in self.adjacents:
-					if not i.dirty:
-						i._color = (125, 125, 125)
+				#for i in self.adjacents:
+					#if not i.dirty:
+						#i._color = (125, 125, 125)
 			o = self
 			
 		return o
