@@ -1,137 +1,85 @@
-import pygame
 import math
-white = (255,255,255)
-black = (0,0,0)
-class Node(object):
-	
-	def __init__(self, x, y, id):		
-		#astar vars
-		self.adjacents = []	
-			#bottom = id + 1
-			#top = id - 1
-			#right = id + rows
-			#left = id - rows
-			#top_right = id + rows - 1
-			#top_left = id - rows + 1
-			#bot_left = id - rows - 1
-			#bot right = id + rows -1
-		self.parent = None		
-		self.walkable = True	
-		self.g = 9000
-		self.h = 9000
-		self.f = self.g + self.h
-		
-		#drawing vars
-		SIZE = 50		
-		self.width = SIZE
-		self.height = SIZE
-		self.id = id
-		self.x = (5 + self.width) * x + 5
-		self.y = (5 + self.height) * y + 5
-		self.pos = (self.width * x, self.height * y)		
-		self.rect = pygame.Rect(self.x, self.y, self.width, self.height)		
-		
-		self.dirty = False		
-		self._color = white		
-		
-
-		
-		
-	@property
-	def color(self):
-		return self._color
-	
-	@color.setter
-	def color(self, value):
-		#print("set dirty")
-		self.dirty = True
-		self._color = value
-		if(value == white):
-			self.dirty = False
-	
-	#properties	
-	def info(self):
-		print("pos = ", self.pos)
-		ids = ""
-		for i in self.adjacents:			
-			ids += " " + str(i.id)
-			
-		print("neighbors = ", ids)
-	
-	def draw(self, screen, font):		
-		if not self.walkable: 
-			self._color = (255,0,0)
-		
-		#create some text to go on the fill
-		
-		#info to display
-		info = str((self.id))
-		#render the text
-		text = font.render(info, 1, (1, 1, 1))
-		#set it's position/parent
-		textpos = self.rect
-		#center it
-		textpos.centerx = self.rect.centerx
-		#draw the square
-		pygame.draw.rect(screen, self._color, self.rect)
-		#screen.fill(self._color, self.rect)
-		#blit the text 
-		screen.blit(text, textpos)
-		
-	def getF(self):
-		return self.h + self.g
-	def setH(self, val):
-		self.h = val
-	def setG(self, val):
-		self.g = val
-	def onclick(self, pos):	
-		
-		
-		oldColor = self.color
-		newColor = (255,0,255)
-		#if we have set it's color manually then it is dirty so ignore it
-		
-		if not self.dirty:			
-			
-			x = pos[0]
-			y = pos[1]		
-			#if we click in this square set it's color
-			if(x > self.rect.left and x < self.rect.right and y >self.rect.top and y < self.rect.bottom):
-				print("clicked on square at ", self.rect)
-				self.info()
-				self._color = newColor
-				for i in self.adjacents:
-					i._color = (125, 125, 125)
-				
-			#if this isn't the square we clicked then set it back to the original
-		
-			
-					
-		
-		
-		
-		
-		
-
-class Astar:
+class Astar(object):
 	def __init__(self, SearchSpace, Start, Goal):
 		self.OPEN = []
 		self.CLOSED = []
-		self.graph = SearchSpace
-		for n in self.graph:
-			 self.SetNeighbors(self.graph[n])
+		self.PATH = []
+		self._graph = SearchSpace		
+		self._start = Start
+		self._goal = Goal
+		self._current = self._start
 		
-			
+		self.Reset()
+
+	
+	@property
+	def current(self):		
+		return self._current
+	@current.setter
+	def current(self, value):
+		#set the current node				
+		self._current = value
+	def Reset(self):
+		for n in self._graph:
+			node = self._graph[n]			
+			node.parent = None
+			node.g = 0
+			node.f = 0
+			node. h = 0
+		for n in self._graph:
+			node = self._graph[n]
+			self.SetNeighbors(node)
+			xdist = int(math.fabs(self._goal.index[0] - node.index[0]))			
+			xdist *= 10
+			ydist = int(math.fabs(self._goal.index[1] - node.index[1]))
+			ydist *= 10
+			node.h = xdist + ydist
 	
 	def Run(self):
+		self.Reset()
 		open = self.OPEN
 		closed = self.CLOSED
+		start = self._start
+		goal = self._goal
 		open.append(start)
-		while not open:
-			current = open.sort(key = lambda x : x.f)[0]
-			open.remove(current)
+		print(open)
+		while open:						
+			open.sort(key = lambda x : x.f)
+			current = open[0]
+			open.remove(current)			
 			closed.append(current)
+			i = 0
+			for adj in current.adjacents:
+				if adj.walkable and adj not in closed:
+					if adj not in open:
+						open.append(adj)
+						adj.parent = current						
+						adj.g = 10 if i < 4 else 14
+					else:
+						move = 10 if i < 4 else 14
+						movecost = move + current.g
+						if movecost < adj.g: 
+							adj.parent = current						
+							adj.g = movecost
+							
+				i+=1
+			if goal in open:
+				self.PATH = self.GetPath(goal)
+				break;
+				
+	def TestStart(self):
+		self.current = self._start
+
+	def GetPath(self, node):
+		path = []
+		current = node
+		while(current != self._start):
+			path.append(current.parent)
+			current = current.parent
+		return path
 			
+		
+		
 	def SetNeighbors(self, node):
 	#always use rows b/c we go nxn
 		rows = 15
@@ -145,17 +93,11 @@ class Astar:
 		b_left = left + 1
 		adjs = [bot, top, right, left, b_right, b_left, t_right, t_left ]
 		for i in adjs:
-			if i in self.graph:
-				if self.graph[i].walkable:
-					node.adjacents.append(self.graph[i])
+			if i in self._graph:			
+				if self._graph[i].walkable:
+					node.adjacents.append(self._graph[i])
+					
 				
-	
-		
-		
-		
-	
-
-
 		
 '''
 	TODO.Add(start)
