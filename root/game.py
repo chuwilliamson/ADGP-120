@@ -1,37 +1,31 @@
 """
- Example program to show using an array to back a grid on-screen.
-
- Sample Python/Pygame Programs
- Simpson College Computer Science
- http://programarcadegames.com/
- http://simpson.edu/computer-science/
-
- Explanation video: http://youtu.be/mdTeqiWyFnc
+ADGP-120 Script it Up!
+Matthew Williamson
 """
 import math
 import pygame
 import random
 from astar import *
 from node import * 
+import os
 
-true = True
-false = False
+
+
 white = (255,255,255)
 black = (0,0,0)
 green = (0,255,0)
 teal = (128, 128, 255)
 yellow = (255,255,0)
-#def mag(a):
-	#return math.sqrt(a[0]^2 + a[1]^2)
-	
+
+path = os.path.dirname(os.path.realpath(__file__))
 def main():
 	
-	Red = (255,255,255)
-	Green = (0,255,0)     
-	Yellow = (255,255,0)	
-	#print("mag of 255,255", mag((255,255)))
-	#create the search space to look through
+	carImg = pygame.image.load(os.path.join(path ,'racecar.png'))
+	
+	#listen for click events
 	mouse_listeners = []
+	#create the search space to look through
+	#dictionary b/c... I do not know how to declare a 2d array and i'm in the car
 	search_space = {}
 	id = 0
 	ROWS = 15
@@ -47,10 +41,10 @@ def main():
 			if (x >= 5 and x <= 6 and y >= 5 and y <= 8):
 				n.walkable = False
 			
-			leftWall = true if x % 15 == 0 else false
-			rightWall = true if x % 15 == 15 - 1 else false
-			topWall = true if y % 15 == 0 else false
-			botWall = true if y % 15 == 15 - 1 else false
+			leftWall = True if x % 15 == 0 else False
+			rightWall = True if x % 15 == 15 - 1 else False
+			topWall = True if y % 15 == 0 else False
+			botWall = True if y % 15 == 15 - 1 else False
 			
 			if(leftWall or rightWall or topWall or botWall):
 				n.walkable = False
@@ -60,6 +54,7 @@ def main():
 			search_space[id] = n
 			id+=1
 		
+	#create some random unwalkable terrain
 	for i in range(20):
 		rng = random.randint(0,(ROWS-1) * (COLS-1))			
 		search_space[rng].walkable = False
@@ -74,15 +69,13 @@ def main():
 	screen_height = ROWS * (pad[0] + HEIGHT) + pad[1]
 	# Set the screen
 	screen = pygame.display.set_mode([screen_width, screen_height])
-	font = pygame.font.Font(None, 18)
+	font = pygame.font.Font(None, 14)
 	# Set title of screen
-	pygame.display.set_caption("Astar")
+	pygame.display.set_caption("ADGP-120 Astar")
 
 	
-	# Used to manage how fast the screen updates
-	clock = pygame.time.Clock()
 	
-	
+	imgset = False
 	Running = True
 	algo = None
 	start = None
@@ -92,24 +85,28 @@ def main():
 	background = background.convert()
 	background.fill(black)
 	# -------- Main Program Loop -----------
-	while Running:		
+	while Running:	
+		#BEGIN INPUT HANDLING
 		if(pygame.key.get_pressed()[pygame.K_ESCAPE]):
 			Running = False
 		for event in pygame.event.get():  # User did something			
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				
-				for callback in mouse_listeners:
+			if event.type == pygame.MOUSEBUTTONDOWN:#pressed mouse				
+				for callback in mouse_listeners: #loop through all the subscribers
+				#for click events
 					cb = callback(pygame.mouse.get_pos())	
-					if cb:
+					if cb: #if the cb came back 
 						if event.button == 1: #left click					
 							print("left click")					
 							for i in search_space:
 								if not search_space[i].dirty:
-									search_space[i].color = white									
-							start._color = teal
+									search_space[i].color = white #clear screen
+							if(start):
+								start._color = teal
+							#screen.blit(carImg, start.pos)
 							init = True
 							if(start is None):
 								print("must set start")
+								init = False
 								break
 
 							else:
@@ -120,8 +117,7 @@ def main():
 								goal._color = yellow
 								algo = Astar(search_space, start, goal)
 								algo.Run()
-								for i in algo.PATH:
-									pygame.time.wait(1)
+								for i in algo.PATH:									
 									if i is not start:
 										i._color = green					
 						if event.button == 3: #clear screen
@@ -136,16 +132,22 @@ def main():
 								cb.info()
 								start = cb
 								start._color = teal
+								imgset = True
+								
+								
 			if event.type == pygame.QUIT:
 				Running = False
-				
+		#END INPUT HANDLING		
 		
-			
-		screen.blit(background,(0,0))
+		
+		#blit the background
+		#so we don't bleed our lines when we redraw
+		
+		screen.blit(background,(0,0))	
 		
 		for i in search_space:
 			search_space[i].draw(screen, font, init)
-			
+		
 		for n in search_space:
 			i = search_space[n]
 			if i.parent:		
@@ -154,17 +156,10 @@ def main():
 				newrect = i.rect.inflate(1-(i.width/2),1-(i.height/2))
 				pygame.draw.ellipse(screen, (100,25,255), newrect, 1)
 				pygame.draw.aaline(screen, (100,25,255), selfmid, parentmid, 5)
+		#if(imgset):
+			#screen.blit(carImg, start.screenpos)		
 		pygame.display.flip()
-		clock.tick(60)
-			
 		
-		# Go ahead and update the screen with what we've drawn.
-		
-		
-
-	# Be IDLE friendly. If you forget this line, the program will 'hang'
-	# on exit.
-	
 	pygame.quit() 
  
 if __name__ == '__main__': main()

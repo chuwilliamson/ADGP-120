@@ -32,7 +32,7 @@ class Node(object):
 		self.pos = (self.width * x, self.height * y)
 		self.screenpos = (self.x, self.y)		
 		self.rect = pygame.Rect(self.x, self.y, self.width, self.height)		
-		
+		self.surface = pygame.Surface((self.width, self.height))
 		self.dirty = False		
 		self._color = white		
 		
@@ -82,7 +82,9 @@ class Node(object):
 		print("index: ", self.index)
 	
 	def draw(self, screen, font, init = True):		
-		pygame.draw.rect(screen, self._color, self.rect)
+		#pygame.draw.rect(screen, self._color, self.rect)
+		self.surface.fill(self._color)
+		screen.blit(self.surface, self.screenpos)
 		if self.walkable:
 			#create some text to go on the fill
 			
