@@ -1,7 +1,24 @@
 import pygame
 import math
-white = (255,255,255)
-black = (0,0,0)
+
+#Color		#(R,G,B)
+Black	=(0,0,0)
+White	=(255,255,255)
+Red		=(255,0,0)
+Lime	=(0,255,0)
+Blue	=(0,0,255)
+Yellow	=(255,255,0)
+Cyan 	=(0,255,255)
+Magenta =(255,0,255)
+Silver	=(192,192,192)
+Gray	=(128,128,128)
+Maroon	=(128,0,0)
+Olive	=(128,128,0)
+Green	=(0,128,0)
+Purple	=(128,0,128)
+Teal	=(0,128,128)
+Navy	=(0,0,128)
+Sky 	= (128, 128, 255)
 class Node(object):
 	
 	def __init__(self, x, y, id):		
@@ -16,13 +33,13 @@ class Node(object):
 			#bot_left = id - rows - 1
 			#bot right = id + rows -1
 		self.parent = None		
-		self.walkable = True	
+		self._walkable = True	
 		self._g = 0
 		self._h = 0
 		self._f = 0
 		
 		#drawing vars
-		SIZE = 60		
+		SIZE = 30		
 		self.width = SIZE
 		self.height = SIZE
 		self.id = id
@@ -34,10 +51,28 @@ class Node(object):
 		self.rect = pygame.Rect(self.x, self.y, self.width, self.height)		
 		self.surface = pygame.Surface((self.width, self.height))
 		self.dirty = False		
-		self._color = white		
+		self._color = White		
 		
 
 	#properties	
+	@property
+	def walkable(self):
+		return self._walkable
+	@walkable.setter
+	def walkable(self, value):
+		white = (255,255,255)
+		red = (255,0,0)
+		self._walkable = value	
+		#if it's set to walkable change to white
+		#this will mark it as undirty
+		if value:
+			self.color = (255,255,255)						
+		else:
+			self.color = (255,0,0)		
+			
+		
+			
+		
 	@property
 	def f(self):
 		return self._f
@@ -66,13 +101,21 @@ class Node(object):
 		return self._color
 	
 	@color.setter
-	def color(self, value):		
-		self.dirty = True
+	#manual setting of colors will mark them dirty so they will stay
+	def color(self, value):	
+		white = (255,255,255)
+		red = (255,0,0)
+		
+		if value is red:
+			self._color = value
+			self.dirty = True
+		else:
+			self._color = value
+			
+		
+		
+			
 		self._color = value
-		if(value == white):
-			self.dirty = False
-	
-	
 	def info(self):
 		print("pos = ", self.pos)
 		ids = ""
@@ -81,7 +124,7 @@ class Node(object):
 		print("neighbors:", ids)
 		print("index: ", self.index)
 	
-	def draw(self, screen, font, init = True):		
+	def draw(self, screen, font, init = True, text = True):		
 		#pygame.draw.rect(screen, self._color, self.rect)
 		self.surface.fill(self._color)
 		screen.blit(self.surface, self.screenpos)
@@ -102,12 +145,11 @@ class Node(object):
 			#center it
 			
 			#draw the square
-			if init:				
+			if init and text:				
 				screen.blit(textf, textfpos)
 				screen.blit(textg, textgpos)
 			#	screen.blit(texth, texthpos)
-		else:			
-			self.color = (255,0,0)
+		
 			
 		
 		
@@ -128,15 +170,9 @@ class Node(object):
 		if(x > self.rect.left and x < self.rect.right and y >self.rect.top and y < self.rect.bottom):			
 			if not self.dirty: #if we didn't set it's color manual
 				self._color = newColor
-				#for i in self.adjacents:
-					#if not i.dirty:
-						#i._color = (125, 125, 125)
 			o = self
 			
 		return o
-				
-				
-			#if this isn't the square we clicked then set it back to the original
 		
 			
 					

@@ -1,7 +1,7 @@
 import math
 
 class Astar(object):
-	def __init__(self, SearchSpace, Start, Goal):
+	def __init__(self, SearchSpace, Start, Goal, dims):
 		self.OPEN = []
 		self.CLOSED = []
 		self.PATH = []
@@ -9,6 +9,8 @@ class Astar(object):
 		self._start = Start
 		self._goal = Goal
 		self._current = self._start
+		self.rows = dims[0]
+		self.cols = dims[1]
 		
 		self.Reset()
 
@@ -44,30 +46,45 @@ class Astar(object):
 		goal = self._goal
 		open.append(start)
 		print(open)
-		while open:						
+		while open:		
+			#sort all nodes by f value
 			open.sort(key = lambda x : x.f)
+			#set the current node to the first element
 			current = open[0]
+			yield current
+			if goal in open:
+				self.PATH = self.GetPath(goal)
+				break;
+			
+			#take it off the open list and add it to the closed list
 			open.remove(current)			
 			closed.append(current)
-			i = 0
+			#i is used to tell if a node is adjacent or not based
+			#on how they are added to the list of adjacent members
+			#walls and unwalkables are added to keep the adjacent unwrap uniform
+			#this will bug out if you remove a border so don't do that..
+			i = 0			
 			for adj in current.adjacents:
 				if adj.walkable and adj not in closed:
 					if adj not in open:
 						open.append(adj)
 						adj.parent = current						
 						adj.g = 10 if i < 4 else 14
+						
 					else:
 						move = 10 if i < 4 else 14
 						movecost = move + current.g
 						if movecost < adj.g: 
 							adj.parent = current						
 							adj.g = movecost
-							
+						
 				i+=1
-			if goal in open:
-				self.PATH = self.GetPath(goal)
-				break;
 				
+			
+			
+				
+			
+			
 	def TestStart(self):
 		self.current = self._start
 
@@ -83,7 +100,10 @@ class Astar(object):
 		
 	def SetNeighbors(self, node):
 	#always use rows b/c we go nxn
-		rows = 15
+		if node.adjacents:
+			node.adjacents = []
+		rows = self.rows
+		cols = self.cols
 		bot = node.id + 1
 		top = node.id - 1
 		right = node.id + rows
