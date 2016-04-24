@@ -68,6 +68,7 @@ class Astar(object):
 				if adj.walkable and adj not in closed:
 					if adj not in open:
 						open.append(adj)
+						yield adj
 						adj.parent = current						
 						adj.g = 10 if i < 4 else 14
 						
@@ -77,7 +78,7 @@ class Astar(object):
 						if movecost < adj.g: 
 							adj.parent = current						
 							adj.g = movecost
-						
+						yield adj.parent
 				i+=1
 				
 			

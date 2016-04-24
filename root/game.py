@@ -16,7 +16,7 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 
 #Color		#(R,G,B)
-Black	=(0,0,0)
+Black	=(55,55,155)
 White	=(255,255,255)
 Red		=(255,0,0)
 Lime	=(0,255,0)
@@ -37,12 +37,20 @@ Gold	=(255,215,0)
 Orange	=(255,165,0)
 
 path = os.path.dirname(os.path.realpath(__file__))
+#create the search space to look through
+	#dictionary b/c... I do not know how to declare a 2d array and i'm in the car
+search_space = {}
+def reset_color():
+	for i in search_space:					
+		if search_space[i].walkable:
+			search_space[i].color = White
+		else:
+			search_space[i].color = Red
 def main():
+	global search_space
 	#listen for click events
 	mouse_listeners = []
-	#create the search space to look through
-	#dictionary b/c... I do not know how to declare a 2d array and i'm in the car
-	search_space = {}
+	
 	id = 0
 	ROWS = 20
 	COLS = 30
@@ -71,7 +79,8 @@ def main():
 			id+=1
 		
 	#create some random unwalkable terrain
-	for i in range(50):
+	mod = 15
+	for i in range(50 + 50 + 50):
 		rng = random.randint(0,(ROWS-1) * (COLS-1))			
 		search_space[rng].walkable = False
 	
@@ -89,7 +98,7 @@ def main():
 	
 	screen = pygame.display.set_mode((screen_width, screen_height), RESIZABLE)
 	font1 = pygame.font.Font(None, 14)
-	font2 = pygame.font.Font(None, 55)
+	font2 = pygame.font.Font(None, 28)
 	# Set title of screen
 	pygame.display.set_caption("ADGP-120 Astar")		
 	
@@ -106,20 +115,15 @@ def main():
 	background = background.convert()
 	background.fill(Black)
 	#carImg = pygame.image.load(os.path.join(path ,'racecar.png'))
-	fin = pygame.mixer.Sound(os.path.join(path,'audio\goteem.wav'))
-	jump = pygame.mixer.Sound(os.path.join(path,'audio\jump2.wav'))
+	fin = pygame.mixer.Sound(os.path.join(path,'audio\jump2.wav'))
+	jump = pygame.mixer.Sound(os.path.join(path,'audio\jump1.wav'))
 	
 	audioclips = [fin,jump]
 	
 		
 	
 	# -------- Main Program Loop -----------
-	def reset_color():
-		for i in search_space:					
-			if search_space[i].walkable:
-				search_space[i].color = White
-			else:
-				search_space[i].color = Red
+
 				
 	while Running:	
 		#BEGIN INPUT HANDLING
@@ -132,19 +136,8 @@ def main():
 				for callback in mouse_listeners: #loop through all the subscribers
 				#for click events
 					cb = callback(pygame.mouse.get_pos())	
-					if cb: #if the cb came back 
-						#MIDDLE MOUSE WHEEL
-						if event.button == 4 and cb is not start:							
-							cb.walkable = True
-							
-						if event.button == 5 and cb is not start:							
-							cb.walkable = True
-							
-						#MIDDLE MOUSE CLICK
-						if event.button == 2  and cb is not start:#set an unwalkable area							
-							cb.walkable = False
-							
-						else:							
+					if cb: #if the cb came back 						
+						if cb:		
 							#LEFT CLICK							
 							if event.button == 1:
 								#AND NOT PAUSED
@@ -167,7 +160,8 @@ def main():
 										gen = algo.Run()
 										for i in audioclips: i.stop()
 								else:
-									cb.walkable = False
+									if cb is not start or cb is not goal:
+										cb.walkable = not cb.walkable
 									
 							#RIGHT CLICK
 							elif event.button == 3: #clear screen
@@ -187,12 +181,17 @@ def main():
 					Running = False
 				if event.key == pygame.K_f:				
 					Paused = not Paused
+					if Paused:
+						pygame.mixer.pause()					
+					if not Paused: 
+						pygame.mixer.unpause()
+				if event.key  == pygame.K_q:
+					print delay,
 				if event.key == pygame.K_r:
-					print(delay)
-					delay += 1
+					print delay,
+					delay += 15
 				if event.key == pygame.K_q:
-					delay -= 1
-					
+					delay -= 15					
 			if event.type == pygame.QUIT:
 				Running = False
 		#END INPUT HANDLING		
@@ -224,9 +223,12 @@ def main():
 			if gen:
 				try:
 					current = gen.next()
+					adj = gen.next()
+					adj.color = Green
+					
 					jump.set_volume(.1)
 					jump.play()
-					
+					pygame.time.wait(delay)					
 					
 					if(current is not start):
 						current._color = Silver
@@ -242,9 +244,17 @@ def main():
 					fin.play()
 					
 					gen = None
-					start = goal
+					#start = goal
 		else:
-			screen.blit(font2.render("PAUSED", True, (255, 255, 25)), background.get_rect())
+			bg = pygame.Surface((screen.get_size()[0]/3, screen.get_size()[1]/3))
+			bg.fill(Gray)
+			textrect1 = bg.get_rect()
+			textrect1 = textrect1.move(5,10)
+			bg.blit(font2.render("PAUSED", True, White), textrect1)
+			textrect2 = bg.get_rect()
+			textrect2 = textrect2.move(5,60)			
+			bg.blit(font2.render("Left click to add new blockers", True, White), textrect2)
+			screen.blit(bg, (0,0))
 		
 		pygame.display.flip()
 	
