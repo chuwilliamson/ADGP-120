@@ -1,82 +1,136 @@
-# Import a library of functions called 'pygame'
+'''game.py'''
+from gameobject import GameObject
 import pygame
-import graph as graphs
-from graph import Graph
-from graph import Node
-import drawablenode
-from drawablenode import *
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-PAD = (5, 5)
-ROWS = 10
-COLS = 10
-WIDTH = 30
-HEIGHT = 30
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 
-
-def main():
-    '''main function'''
-    pygame.init()
-    # Define the colors we will use in RGB format
-    SCREEN_WIDTH = COLS * (PAD[0] + WIDTH) + PAD[1]
-    SCREEN_HEIGHT = ROWS * (PAD[0] + HEIGHT) + PAD[1]
-    # Set the height and width of the SCREEN
-
-    SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    SEARCH_SPACE = Graph([ROWS, COLS])
-
-    NODES = {}
-    for i in range(ROWS):
-        for j in range(COLS):
-            node = SEARCH_SPACE.get_node([i, j])
-            drawnode = DrawableNode(node)
-            NODES[str(i), ",", str(j)] = drawnode
+class Game(object):
+    '''pygame object'''
+    def __init__(self):
+        '''abc'''
+        self._name = ""        
+        pygame.display.init()
+        pygame.font.init()        
+        self._screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self._clock = pygame.time.Clock()        
+        self._background = pygame.Surface(self._screen.get_size())
+        self._background = self._background.convert()        
+        self._background.fill(BLACK)
+        self._gamestates = {}
+        self._gamestates["init"] =  ["running"]
+        self._gamestates["running"] =  ["pause", "quit"]
+        self._gamestates["pause"] = ["running", "quit"]
+        self._gamestates["quit"] = []
+        self._currentstate = "init"
+        self._events = pygame.event.get()
+        
     
-    # set the neighbors
-    pygame.display.set_caption("PyStar Year 1 2017")
+    def _set_state(self, value):        
+        '''set state of the game'''
+        if value in self._gamestates[self._currentstate]:
+            print "newstate =>", self._currentstate, "to", value
+            self._currentstate = value
+        else:
+            print "can not go from " , self._currentstate, "to", value
 
-    # Loop until the user clicks the close button.
-    DONE = False
-    CLOCK = pygame.time.Clock()
+    def _get_state(self):
+        return self._currentstate
+    
+    gamestate = property(_get_state, _set_state)
 
-    pygame.font.init()
-    while not DONE:
+    def _startup(self):
+        pygame.display.set_caption(self._name) 
+        self._set_state("running")
+        return True
 
-        # This limits the while loop to a max of 10 times per second.
-        # Leave this out and we will use all CPU we can.
-        CLOCK.tick(10)
+    def _update(self):
+        if self._get_state() == "quit":
+            return False        
+        self._clock.tick(10)
+        self._events = pygame.event.get()
+        for event in self._events:
+            if event.type == pygame.constants.QUIT:
+                self._set_state("quit")                       
+            
+            
+        return True
 
-        for event in pygame.event.get():  # User did something
-            if event.type == pygame.QUIT:  # If user clicked close
-                DONE = True  # Flag that we are DONE so we exit this loop
+    def _draw(self):       
+        return 0 
+                        
 
-        # All drawing code happens after the for loop and but
-        # inside the main while DONE==False loop.
+    def _shutdown(self):
+        pygame.quit()
 
-        # Clear the SCREEN and set the SCREEN background
-        SCREEN.fill(WHITE)
-        # Draw a circle
-        for i in NODES:
-            i.draw(SCREEN)
+class LiamsGame(Game):    
+    '''need documentation'''
+    def __init__(self, name):
+        '''need documentation'''
+        super(LiamsGame, self).__init__()
+        self._name = name
+        self._gameobjects = []
+        
+        self._font = pygame.font.Font(None, 24)
+        self.pause_surface = pygame.Surface((self._screen.get_size()[0]/3, self._screen.get_size()[1]/3))
+        self.pause_surface.fill(GREEN)
+        self.pause_rect = self.pause_surface.get_rect()
+    
+    def addtobatch(self, gameobject):
+        '''need documentation'''
+        self._gameobjects.append(gameobject)
 
-        CURRENT = NODES[1]
-        for i in CURRENT.adjacents:
-            i.color = GREEN
+    def update(self):
+        if not super(LiamsGame, self)._update():
+            return False
+        for event in self._events:            
+            if event.type == pygame.KEYDOWN:
+                keystate = pygame.key.get_pressed()        
+                if keystate[pygame.constants.K_e]:
+                    self.gamestate = "pause"
+                if keystate[pygame.constants.K_r]:
+                    self.gamestate = "running"
 
-        # Go ahead and update the SCREEN with what we've drawn.
-        # This MUST happen after all the other drawing commands.
-        bg = pygame.Surface(
-            (SCREEN.get_size()[0] / 3, SCREEN.get_size()[1] / 3))
-        bg.fill(BLACK)
-        textrect = bg.get_rect()
+        for go in self._gameobjects:
+            go.update(self._events)
+        
+
+        return True
+
+    def draw(self):
+        '''need documentation'''            
+        self._screen.blit(self._background, (0,0))
+        for go in self._gameobjects:                        
+            go.draw(self._screen)
+            
+        if(self.gamestate == "pause"):
+            
+            self.pause_surface.blit(self._font.render("PAUSED", True, WHITE), self.pause_rect.move(SCREEN_WIDTH/3,SCREEN_HEIGHT/3))
+            
+            self._screen.blit(self._background, (0,0))
+            self._screen.blit(self.pause_surface, (0,0))
+       
         pygame.display.flip()
 
-    # Be IDLE friendly
-    pygame.quit()
+        
+
+    def run(self):
+        '''need documentation'''
+        if super(LiamsGame,self)._startup():
+            while self.update():
+                self.draw()                
+        super(LiamsGame, self)._shutdown()
+
+def main():
+    game = LiamsGame("Liams game")
+    player = GameObject("liam", (400, 300), 30, 30)
+    game.addtobatch(player)
+    game.run()
 
 if __name__ == "__main__":
     main()

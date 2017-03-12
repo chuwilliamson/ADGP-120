@@ -4,7 +4,6 @@ import pygame
 
 class DrawableNode(object):
     '''drawable node'''
-
     def __init__(self, graphnode):
         # astar vars
         posx = graphnode.value[0]
