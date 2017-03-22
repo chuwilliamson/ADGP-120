@@ -5,6 +5,7 @@ from node import Node
 
 class Graph(object):
     '''graph object'''
+
     def __init__(self, vertices=None, edges=None):
         '''create square graph'''
         self._nodes = {}
@@ -35,7 +36,7 @@ class Graph(object):
         dirs = [
             [1, 0], [1, 1], [0, 1], [-1, 1],
             [-1, 0], [-1, -1], [0, -1], [1, -1]
-            ]
+        ]
 
         for i in dirs:
             item1 = i[0] + node.value[0]
