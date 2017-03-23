@@ -27,7 +27,7 @@ class SteeringBehavioursGame(Game):
         for event in self._events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i in self._gameobjects:
-                    i._targetpos = pygame.mouse.get_pos()
+                    i.set_target(pygame.mouse.get_pos())
         for i in self._gameobjects:
             i.update(self._deltatime)
 

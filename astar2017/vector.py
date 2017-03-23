@@ -10,14 +10,16 @@ class Vector2(object):
         self._value = (xpos, ypos)
         self._xpos = self._value[0]
         self._ypos = self._value[1]
+        self.x = self._xpos
+        self.y = self._ypos
 
     def __add__(self, other):
         '''add vector to vector'''
-        return (self._xpos + other._xpos, self._ypos + other._ypos)
+        return Vector2(self.x + other.x, self.y + other.y)
 
     def __sub__(self, other):
         '''subtract vector from vector'''
-        return (self._value[0] - other._xpos, self._value[1] - other._ypos)
+        return Vector2(self.x - other.x, self.y - other.y)
 
     @property
     def magnitude(self):
@@ -28,6 +30,8 @@ class Vector2(object):
         '''assume a tuple as v1'''
         sqrmag = self._xpos * self._xpos + self._ypos * self._ypos
         return math.sqrt(sqrmag)
+    def __getitem__(self, key):
+        return self._value[key]
 
     @property
     def direction(self):
@@ -41,22 +45,21 @@ class Vector2(object):
 
     def displacement(self, vector2):
         '''get displacement between two vectors- straight line distance'''
-        return Vector2(vector2._xpos - self._xpos, vector2._ypos - self._ypos)
+        return Vector2(vector2.x - self.x, vector2.y - self.y)
 
     def distance(self, vector2):
         '''get the distance of two vectors'''
         displacement = self.displacement(vector2)
         return math.fabs(displacement.magnitude)
 
-    def scalarmult(self, scalar):
-        '''scale vectors'''
-        return Vector2(self._xpos * scalar, self._ypos * scalar)
 
     def __str__(self):
         '''get info'''
         res = ""
         res += "<" + str(self._xpos) + ", " + str(self._ypos) + ">"
         return res
+    def __mul__(self, other):
+        return Vector2(self._xpos * other, self._ypos * other)
 
 
 # tests
@@ -65,6 +68,8 @@ if __name__ == '__main__':
     testa = Vector2(35, 35)
     print testa + testv
     print testa - testv
+
+    print "mult", testa * 5
     print testv.magnitude  # 35.3 or root2 * 25
     print testv.direction  # .7, .7
     print testv.distance(testa)  # 0

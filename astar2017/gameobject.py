@@ -15,13 +15,15 @@ class GameObject(object):
         # Position += Velocity * deltaTime
         # Heading = normalise( Velocity )
         self._name = name
-        self._pos = position
+        self._position = Vector2(position[0], position[1])
         self._targetpos = Vector2(0, 0)
         self._force = Vector2(0, 0)
         self._velocity = Vector2(1, 0)
         self._direction = Vector2(1, 0)
         self._width = width
         self._height = height
+        self._acceleration = Vector2(0, 0)
+        self._mass = 1
 
         self._color = [255, 255, 255]
         self._surface = pygame.Surface((self._width, self._height))
@@ -30,39 +32,43 @@ class GameObject(object):
         self._surface = self._surface.convert()
 
     def add_force(self, force):
-        '''add force to this gameobject'''
-        self._force = self._force
+        '''add force to this gameobject'''        
+        self._force = self._force + force
 
     def seek(self, target):
         '''seek to target'''
         max_velocity = 20
-        displacement = get_displacement(self._pos, target)
-        target_direction = get_direction(displacement)
-        force = scale_vector(target_direction, max_velocity)
-        seekforce = sub_vectors(force, self._velocity)
-
+        displacement = target - self._position
+        target_direction = displacement.direction
+        force = target_direction * max_velocity
+        seekforce = force - self._velocity
         return seekforce
+
+    def set_target(self, target):
+        '''abc'''
+        self._targetpos = Vector2(target[0], target[1])
 
     def update(self, deltatime):
         '''update gameobject logic'''
-        self.add_force(scale_vector(self.seek(self._targetpos), 5))
-        self._force = scale_vector(self._force, deltatime)
-        self._velocity = add_vectors(
-            self._velocity, scale_vector(self._force, deltatime))
-        self._pos = add_vectors(self._pos, self._velocity)
+        force = self.seek(self._targetpos)
+        self.add_force(force * 5)
+        self._force = self._force * deltatime
+        self._acceleration = self._force * (1 / self._mass)
+        self._velocity = self._velocity + self._force * deltatime
+        self._position = self._position + self._velocity
 
     def draw(self, background):
         '''draw the gameobject'''
 
-        center = (self._pos[0] + self._width / 2,
-                  self._pos[1] + self._height / 2)
+        center = (self._position.x + self._width / 2,
+                  self._position.y + self._height / 2)
         color = (125, 125, 125)
         pygame.draw.line(background, color, center,
                          (center[0], center[1] - 30), 2)
-        background.blit(self._surface, self._pos)
+        background.blit(self._surface, (self._position.x, self._position.y))
 
     def __str__(self):
         '''get info'''
         res = ""
-        res += "Name:" + str(self._name) + "\nPosition: " + str(self._pos)
+        res += "Name:" + str(self._name) + "\nPosition: " + str(self._position)
         return res
