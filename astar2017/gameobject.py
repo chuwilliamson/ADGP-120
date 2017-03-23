@@ -26,13 +26,14 @@ class GameObject(object):
         self._mass = 1
 
         self._color = [255, 255, 255]
-        self._surface = pygame.Surface((self._width, self._height))
+        self._surface = pygame.Surface((self._width, self._height), pygame.SRCALPHA)
+        #self._surface.set_colorkey((255, 255, 255))
         points = [(1, height - 1), (width, height - 1), ((width / 2), 0)]
         pygame.draw.lines(self._surface, (125, 125, 255), True, points)
-        self._surface = self._surface.convert()
+        self._surface = self._surface.convert_alpha()
 
     def add_force(self, force):
-        '''add force to this gameobject'''        
+        '''add force to this gameobject'''
         self._force = self._force + force
 
     def seek(self, target):
