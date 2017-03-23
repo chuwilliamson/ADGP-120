@@ -1,14 +1,8 @@
 '''game.py'''
+# pylint: disable=E1121
 from gameobject import GameObject
 import pygame
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+from constants import *
 
 
 class Game(object):
@@ -21,9 +15,10 @@ class Game(object):
         pygame.font.init()
         self._screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self._clock = pygame.time.Clock()
-        self._background = pygame.Surface(self._screen.get_size())
-        self._background = self._background.convert()
-        self._background.fill(BLACK)
+        self._fps = 30
+        self._playtime = 0.0
+        self._background = pygame.Surface(self._screen.get_size()).convert()
+        self._background.fill((255, 255, 255))
         self._gamestates = {}
         self._gamestates["init"] = ["running"]
         self._gamestates["running"] = ["pause", "quit"]
@@ -31,6 +26,8 @@ class Game(object):
         self._gamestates["quit"] = []
         self._currentstate = "init"
         self._events = pygame.event.get()
+        self.font = pygame.font.SysFont('mono', 24, bold=True)
+        self._deltatime = 0.0
 
     def _set_state(self, value):
         '''set state of the game'''
@@ -53,44 +50,10 @@ class Game(object):
     def _update(self):
         if self._get_state() == "quit":
             return False
-        self._clock.tick(10)
+        milliseconds = self._clock.tick(self._fps)
+        self._deltatime = milliseconds / 1000.0
+        self._playtime += self._deltatime
         self._events = pygame.event.get()
-        for event in self._events:
-            if event.type == pygame.constants.QUIT:
-                self._set_state("quit")
-
-        return True
-
-    def _draw(self):
-        return 0
-
-    def _shutdown(self):
-        pygame.quit()
-
-
-class LiamsGame(Game):
-    '''need documentation'''
-
-    def __init__(self, name):
-        '''need documentation'''
-        super(LiamsGame, self).__init__()
-        self._name = name
-        self._gameobjects = []
-
-        self._font = pygame.font.Font(None, 24)
-        self.pause_surface = pygame.Surface(
-            (self._screen.get_size()[0] / 3, self._screen.get_size()[1] / 3))
-        self.pause_surface.fill(GREEN)
-        self.pause_rect = self.pause_surface.get_rect()
-
-    def addtobatch(self, gameobject):
-        '''need documentation'''
-        self._gameobjects.append(gameobject)
-
-    def update(self):
-        '''need documentation'''
-        if not super(LiamsGame, self)._update():
-            return False
         for event in self._events:
             if event.type == pygame.KEYDOWN:
                 keystate = pygame.key.get_pressed()
@@ -98,41 +61,26 @@ class LiamsGame(Game):
                     self.gamestate = "pause"
                 if keystate[pygame.constants.K_r]:
                     self.gamestate = "running"
-
-        for go in self._gameobjects:
-            go.update(self._events)
+                if keystate[pygame.constants.K_ESCAPE]:
+                    self._set_state("quit")
+            if event.type == pygame.constants.QUIT:
+                self._set_state("quit")
 
         return True
 
-    def draw(self):
-        '''need documentation'''
-        self._screen.blit(self._background, (0, 0))
-        for go in self._gameobjects:
-            go.draw(self._screen)
-
-        if(self.gamestate == "pause"):
-
-            self.pause_surface.blit(self._font.render(
-                "PAUSED", True, WHITE), self.pause_rect.move(SCREEN_WIDTH / 3, SCREEN_HEIGHT / 3))
-
-            self._screen.blit(self._background, (0, 0))
-            self._screen.blit(self.pause_surface, (0, 0))
-
+    def _draw(self):
+        '''need docstring'''
+        self.draw_text("FPS: {:6.3}{}PLAYTIME: {:6.3} SECONDS".format(
+            self._clock.get_fps(), " " * 5, self._playtime))
         pygame.display.flip()
+        self._screen.blit(self._background, (0, 0))
 
-    def run(self):
-        '''need documentation'''
-        if super(LiamsGame, self)._startup():
-            while self.update():
-                self.draw()
-        super(LiamsGame, self)._shutdown()
+    def _shutdown(self):
+        '''need docstring'''
+        pygame.quit()
 
-
-def main():
-    game = LiamsGame("Liams game")
-    player = GameObject("liam", (400, 300), 30, 30)
-    game.addtobatch(player)
-    game.run()
-
-if __name__ == "__main__":
-    main()
+    def draw_text(self, text):
+        """Center text in window"""
+        fw, fh = self.font.size(text)
+        surface = self.font.render(text, True, (0, 0, 0))
+        self._screen.blit(surface, (25, 25))
