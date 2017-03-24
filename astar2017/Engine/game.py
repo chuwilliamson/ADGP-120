@@ -7,7 +7,6 @@ from constants import *
 
 class Game(object):
     '''pygame object'''
-
     def __init__(self):
         '''abc'''
         self._name = ""
@@ -48,6 +47,7 @@ class Game(object):
         return True
 
     def _update(self):
+        '''input and time'''
         if self._get_state() == "quit":
             return False
         milliseconds = self._clock.tick(self._fps)
@@ -76,7 +76,7 @@ class Game(object):
         self._screen.blit(self._background, (0, 0))
 
     def _shutdown(self):
-        '''need docstring'''
+        '''shutdown the game properly'''
         pygame.quit()
 
     def draw_text(self, text):

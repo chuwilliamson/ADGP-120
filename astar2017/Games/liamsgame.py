@@ -1,8 +1,8 @@
 '''concrete game'''
 # pylint: disable=E1121
-from game import Game
+from Engine.game import Game
 import pygame
-from constants import *
+from Engine.constants import *
 
 class LiamsGame(Game):
     '''need documentation'''
@@ -33,7 +33,7 @@ class LiamsGame(Game):
                 if keystate[pygame.constants.K_e]:
                     self.gamestate = "pause"
                 if keystate[pygame.constants.K_r]:
-                    self.gamestate = "running"
+                    self.gamestate = "quit"
 
         for gameobject in self._gameobjects:
             gameobject.update(self._clock.get_time())

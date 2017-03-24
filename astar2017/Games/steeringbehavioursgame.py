@@ -1,10 +1,13 @@
 '''concrete game'''
 # pylint: disable=E1121
-from game import Game
+
+import Engine.game
+from Engine.game import Game
+
 import pygame
-from constants import *
-import vector
-from vector import *
+from Engine.constants import *
+import Utilities.vector
+from Utilities.vector import *
 
 
 class SteeringBehavioursGame(Game):

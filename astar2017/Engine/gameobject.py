@@ -2,8 +2,9 @@
 # pylint: disable=E1121
 import pygame.locals
 import pygame.constants
-import vector
-from vector import *
+import Utilities.vector
+from Utilities.vector import Vector2
+import math
 
 
 class GameObject(object):
@@ -24,13 +25,13 @@ class GameObject(object):
         self._height = height
         self._acceleration = Vector2(0, 0)
         self._mass = 1
-
         self._color = [255, 255, 255]
-        self._surface = pygame.Surface((self._width, self._height), pygame.SRCALPHA)
-        #self._surface.set_colorkey((255, 255, 255))
-        points = [(1, height - 1), (width, height - 1), ((width / 2), 0)]
+        self._surface = pygame.Surface(
+            (self._width, self._height), pygame.SRCALPHA)
+
+        points = [(0, 0), (0, height), (width, (height / 2))]
         pygame.draw.lines(self._surface, (125, 125, 255), True, points)
-        self._surface = self._surface.convert_alpha()
+        # self._surface = self._surface.convert_alpha()
 
     def add_force(self, force):
         '''add force to this gameobject'''
@@ -56,6 +57,10 @@ class GameObject(object):
         self._force = self._force * deltatime
         self._acceleration = self._force * (1 / self._mass)
         self._velocity = self._velocity + self._force * deltatime
+        self._direction = self._velocity.direction
+        if self._velocity.magnitude > 20:
+            self._velocity = self._velocity * (1 / 20)
+
         self._position = self._position + self._velocity
 
     def draw(self, background):
@@ -63,10 +68,16 @@ class GameObject(object):
 
         center = (self._position.x + self._width / 2,
                   self._position.y + self._height / 2)
+        offset = (center[0] + (self._direction.x * 25),
+                  center[1] + (self._direction.y * 25))
         color = (125, 125, 125)
-        pygame.draw.line(background, color, center,
-                         (center[0], center[1] - 30), 2)
-        background.blit(self._surface, (self._position.x, self._position.y))
+        pygame.draw.line(background, color, center, offset, 2)
+        dotp = Vector2(1, 0).dot(self._direction)
+        theta = math.acos(dotp)
+        newsurface = pygame.transform.rotate(
+            self._surface, theta * (180 / 3.14))
+
+        background.blit(newsurface, (self._position.x, self._position.y))
 
     def __str__(self):
         '''get info'''
