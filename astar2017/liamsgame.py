@@ -1,8 +1,8 @@
 '''concrete game'''
 # pylint: disable=E1121
-from Engine.game import Game
+from game import Game
 import pygame
-from Engine.constants import *
+from constants import *
 
 class LiamsGame(Game):
     '''need documentation'''

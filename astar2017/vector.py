@@ -24,6 +24,12 @@ class Vector2(object):
         '''magnitude'''
         return self.get_magnitude()
 
+    @property
+    def direction(self):
+        '''aaa'''
+        return self.get_direction()
+
+
     def get_magnitude(self):
         '''assume a tuple as v1'''
         sqrmag = self.x * self.x + self.y * self.y
@@ -31,11 +37,6 @@ class Vector2(object):
 
     def __getitem__(self, key):
         return self._value[key]
-
-    @property
-    def direction(self):
-        '''aaa'''
-        return self.get_direction()
 
     def get_direction(self):
         '''get direction of vector'''
@@ -51,6 +52,7 @@ class Vector2(object):
     def dot(self, other):
         '''dot product'''
         return (self.x * other.x) + (self.y * other.y)
+
     def distance(self, vector2):
         '''get the distance of two vectors'''
         displacement = self.displacement(vector2)

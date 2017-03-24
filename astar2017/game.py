@@ -1,6 +1,5 @@
 '''game.py'''
 # pylint: disable=E1121
-from gameobject import GameObject
 import pygame
 from constants import *
 
@@ -15,6 +14,7 @@ class Game(object):
         self._screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self._clock = pygame.time.Clock()
         self._fps = 30
+        
         self._playtime = 0.0
         self._background = pygame.Surface(self._screen.get_size()).convert()
         self._background.fill((255, 255, 255))
@@ -72,6 +72,7 @@ class Game(object):
         '''need docstring'''
         self.draw_text("FPS: {:6.3}{}PLAYTIME: {:6.3} SECONDS".format(
             self._clock.get_fps(), " " * 5, self._playtime))
+
         pygame.display.flip()
         self._screen.blit(self._background, (0, 0))
 
