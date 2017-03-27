@@ -1,3 +1,4 @@
+
 '''vector helpers'''
 import math
 
@@ -8,8 +9,25 @@ class Vector2(object):
     def __init__(self, xpos, ypos):
         '''init'''
         self._value = (xpos, ypos)
-        self.x = self._value[0]
-        self.y = self._value[1]
+        self._x = self._value[0]
+        self._y = self._value[1]
+
+    def _setx_(self, value):
+        self._x = value
+        self._value = (value, self._y)
+
+    def _sety_(self, value):
+        self._y = value
+        self._value = (self._x, value)
+
+    def _getx_(self):
+        return self._x
+
+    def _gety_(self):
+        return self._y
+
+    x = property(_getx_, _setx_)
+    y = property(_gety_, _sety_)
 
     def __add__(self, other):
         '''add vector to vector'''
@@ -18,6 +36,11 @@ class Vector2(object):
     def __sub__(self, other):
         '''subtract vector from vector'''
         return Vector2(self.x - other.x, self.y - other.y)
+
+    @property
+    def value(self):
+        '''return the value'''
+        return (self.x, self.y)
 
     @property
     def magnitude(self):
@@ -29,6 +52,16 @@ class Vector2(object):
         '''aaa'''
         return self.get_direction()
 
+    @property
+    def normalized(self):
+        '''aaa'''
+        return self.get_direction()
+
+    def __iadd__(self, other):
+        '''+= operation'''
+        self.x = self.x + other.x
+        self.y = self.y + other.y
+        return self
 
     def get_magnitude(self):
         '''assume a tuple as v1'''
@@ -43,7 +76,7 @@ class Vector2(object):
         v_mag = self.magnitude
         if v_mag == 0:
             return Vector2(0, 0)
-        return Vector2(self.x * (1 / v_mag), self.y * (1/ v_mag))
+        return Vector2(self.x * (1 / v_mag), self.y * (1 / v_mag))
 
     def displacement(self, vector2):
         '''get displacement between two vectors- straight line distance'''
@@ -60,8 +93,8 @@ class Vector2(object):
 
     def __str__(self):
         '''get info'''
-        res = ""
-        res += "<" + str(self.x) + ", " + str(self.y) + ">"
+        res = "<{0}, {1}>".format(self.x, self.y)
+        res.format(self.x, self.y)
         return res
 
     def __mul__(self, other):

@@ -1,13 +1,15 @@
 '''gameobject to render'''
-# pylint: disable=E1121
+
 import math
 import pygame.locals
 import pygame.constants
 from vector import Vector2
 from constants import *
 
+
 class GameObject(object):
     '''need documentation'''
+
     def __init__(self, name, position, width, height):
         '''make the go'''
         # Velocity += Force * deltaTime
@@ -16,85 +18,62 @@ class GameObject(object):
         self._name = name
         self._width = width
         self._height = height
-        self._color = [255, 255, 255]
+        self._color = WHITE
         self._surface = pygame.Surface(
             (self._width, self._height), pygame.SRCALPHA)
 
-
         points = [(0, 0), (0, height), (width, (height / 2))]
-        pygame.draw.lines(self._surface, (125, 125, 255), True, points)
 
         self._position = Vector2(position[0], position[1])
+        self._target = Vector2(0, 0)
+        self._direction = Vector2(1, 0)
         self._forward = Vector2(1, 0)
+        self._up = Vector2(0, 1)
+        self.font = pygame.font.SysFont('mono', 12)
 
-    def update(self, deltatime):
-        '''update gameobject logic'''
-
+        pygame.draw.lines(self._surface, (125, 125, 255), True, points)
+        pygame.transform.flip(self._surface, False, True)
 
     def draw(self, screen):
         '''draw the gameobject'''
 
-        center = (self._position.x + self._width / 2,
-                  self._position.y + self._height / 2)
-        offset = (center[0] + (self._forward.x * 25),
-                  center[1] + (self._forward.y * 25))
-        color = (125, 125, 125)
-        pygame.draw.line(screen, color, center, offset, 2)
-        dotp = Vector2(1, 0).dot(self._forward)
-        theta = math.acos(dotp)
-        newsurface = pygame.transform.rotate(
-            self._surface, theta * (180 / 3.14))
+        center = Vector2(self._position.x + self._width / 2,
+                         self._position.y + self._height / 2)
 
-        #screen.blit(newsurface, (self._position.x, self._position.y))
-        screen.blit(newsurface, (self._position.x, self._position.y))
+        offset_dir = Vector2(center.x + self._direction.x * 25,
+                             center.y + self._direction.y * 25)
+
+        offset_upward = Vector2(center.x + self._up.x * 25,
+                                center.y + self._up.y * 25)
+
+        offset_forward = Vector2(center.x + self._forward.x * 25,
+                                 center.y + self._forward.y * 25)
+
+        pygame.draw.line(screen, RED, center.value, offset_dir.value, 2)
+        pygame.draw.line(screen, GREEN, center.value, offset_upward.value, 2)
+        pygame.draw.line(screen, BLUE, center.value, offset_forward.value, 2)
+        pygame.draw.line(screen, BLACK, center.value, self._target.value, 1)
+        textpos = "Pos: <{0:.4} {1:.4}>".format(
+            self._position.x, self._position.y)
+        textdir = "Dir: <{0:.2} {1:.2}>".format(
+            self._direction.x, self._direction.y)
+        dotp = self._forward.dot(self._direction)
+        angle = math.atan2(self._position.y, self._position.x)
+        textangle = "angle: {0}".format(dotp)
+
+        surface = self.font.render(textpos, True, (0, 0, 0))
+        screen.blit(surface, (self._position.x, self._position.y + 75))
+
+        surface = self.font.render(textdir, True, (0, 0, 0))
+        screen.blit(surface, (self._position.x, self._position.y + 75 + 15))
+
+        surface = self.font.render(textangle, True, (0, 0, 0))
+        screen.blit(surface, (self._position.x, self._position.y + 75 + 30))
+
+        screen.blit(self._surface, (self._position.value))
 
     def __str__(self):
         '''get info'''
         res = ""
         res += "Name:" + str(self._name) + "\nPosition: " + str(self._position)
         return res
-
-
-class Agent(GameObject):
-    '''agent'''
-    def __init__(self, name, position):
-        '''agent init'''
-        super(Agent, self).__init__(name, position, 25, 25)
-        self._position = Vector2(position[0], position[1])
-        self._targetpos = Vector2(0, 0)
-        self._force = Vector2(0, 0)
-        self._velocity = Vector2(1, 0)
-        self._direction = Vector2(1, 0)
-        self._acceleration = Vector2(0, 0)
-        self._mass = 1
-
-    def add_force(self, force):
-        '''add force to this gameobject'''
-        self._force = self._force + force
-
-    def update(self, deltatime):
-        '''agent update'''
-        force = self.seek(self._targetpos)
-        self.add_force(force * 5)
-        self._force = self._force * deltatime
-        self._acceleration = self._force * (1 / self._mass)
-        self._velocity = self._velocity + self._force * deltatime
-        self._direction = self._velocity.direction
-        self._forward = self._direction
-        if self._velocity.magnitude > 20:
-            self._velocity = self._velocity * (1 / 20)
-
-        self._position = self._position + self._velocity
-
-    def seek(self, target):
-        '''seek to target'''
-        max_velocity = 20
-        displacement = target - self._position
-        target_direction = displacement.direction
-        force = target_direction * max_velocity
-        seekforce = force - self._velocity
-        return seekforce
-
-    def set_target(self, target):
-        '''abc'''
-        self._targetpos = Vector2(target[0], target[1])

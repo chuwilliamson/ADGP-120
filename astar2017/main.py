@@ -1,17 +1,16 @@
 '''main file'''
 from steeringbehavioursgame import SteeringBehavioursGame
-from liamsgame import LiamsGame
-from gameobject import GameObject
-from gameobject import Agent
+from agent import Agent
 from vector import Vector2
+
 
 def main():
     '''main execution func'''
     game = SteeringBehavioursGame("SteeringBehaviours")
 
-    for i in range(25):
-        pos = (400 + (i * i), 400 + (i * i))
-        game.addtobatch(Agent("agent", pos))
+    pos = (400, 400)
+    agent = Agent("agent", pos, Vector2(5, 0))
+    game.addtobatch(agent)
     game.run()
 
 

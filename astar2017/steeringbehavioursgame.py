@@ -27,9 +27,20 @@ class SteeringBehavioursGame(Game):
         if not super(SteeringBehavioursGame, self)._update():
             return False
         for event in self._events:
+            if event.type == pygame.KEYDOWN:
+                keystate = pygame.key.get_pressed()
+                if keystate[pygame.constants.K_s]:
+                    for i in self._gameobjects:
+                        if i.currentstate == 'seek':
+                            i.currentstate = 'idle'
+                        else:
+                            i.currentstate = 'seek'
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i in self._gameobjects:
-                    i.set_target(pygame.mouse.get_pos())
+                    mousepos = (pygame.mouse.get_pos()[
+                                0], pygame.mouse.get_pos()[1])
+
+                    i.set_target(mousepos)
         for i in self._gameobjects:
             i.update(self._deltatime)
 

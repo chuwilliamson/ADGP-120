@@ -1,11 +1,12 @@
 '''game.py'''
-# pylint: disable=E1121
+
 import pygame
 from constants import *
 
 
 class Game(object):
     '''pygame object'''
+
     def __init__(self):
         '''abc'''
         self._name = ""
@@ -14,9 +15,10 @@ class Game(object):
         self._screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self._clock = pygame.time.Clock()
         self._fps = 30
-        
         self._playtime = 0.0
-        self._background = pygame.Surface(self._screen.get_size()).convert()
+        self._background = pygame.Surface(
+            (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+
         self._background.fill((255, 255, 255))
         self._gamestates = {}
         self._gamestates["init"] = ["running"]
@@ -82,6 +84,5 @@ class Game(object):
 
     def draw_text(self, text):
         """Center text in window"""
-        fw, fh = self.font.size(text)
         surface = self.font.render(text, True, (0, 0, 0))
         self._screen.blit(surface, (25, 25))
