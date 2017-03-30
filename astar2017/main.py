@@ -2,15 +2,16 @@
 from steeringbehavioursgame import SteeringBehavioursGame
 from agent import Agent
 from vector import Vector2
-
+from random import random
 
 def main():
     '''main execution func'''
     game = SteeringBehavioursGame("SteeringBehaviours")
 
     pos = (400, 400)
-    agent = Agent("agent", pos, Vector2(5, 0))
-    game.addtobatch(agent)
+    for _ in range(10):
+        agent = Agent("agent", (0, 0), Vector2(random() * 400 + 50, random() * 400))
+        game.addtobatch(agent)
     game.run()
 
 

@@ -30,17 +30,13 @@ class SteeringBehavioursGame(Game):
             if event.type == pygame.KEYDOWN:
                 keystate = pygame.key.get_pressed()
                 if keystate[pygame.constants.K_s]:
-                    for i in self._gameobjects:
-                        if i.currentstate == 'seek':
-                            i.currentstate = 'idle'
-                        else:
-                            i.currentstate = 'seek'
+                    pass
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i in self._gameobjects:
-                    mousepos = (pygame.mouse.get_pos()[
-                                0], pygame.mouse.get_pos()[1])
+                    mousex = pygame.mouse.get_pos()[0]
+                    mousey = pygame.mouse.get_pos()[1]
+                    i.set_target((mousex, mousey))
 
-                    i.set_target(mousepos)
         for i in self._gameobjects:
             i.update(self._deltatime)
 

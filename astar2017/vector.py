@@ -48,11 +48,6 @@ class Vector2(object):
         return self.get_magnitude()
 
     @property
-    def direction(self):
-        '''aaa'''
-        return self.get_direction()
-
-    @property
     def normalized(self):
         '''aaa'''
         return self.get_direction()
@@ -100,17 +95,24 @@ class Vector2(object):
     def __mul__(self, other):
         return Vector2(self.x * other, self.y * other)
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
 
+    def __ne__(self, other):
+        return self.x != other.x and self.y != other.y
+
+
+def test_add(a, b, result):
+    '''test addition'''
+    if a + b != result:
+        print 'fail'
+    else:
+        print 'pass'
 # tests
 if __name__ == '__main__':
-    testv = Vector2(25, 25)
-    testa = Vector2(35, 35)
-    print testa + testv
-    print testa - testv
-
-    print "mult", testa * 5
-    print testv.magnitude  # 35.3 or root2 * 25
-    print testv.direction  # .7, .7
-    print testv.distance(testa)  # 0
-
-    print testa.distance(testv)  # 0
+    a = Vector2(25, 25)
+    b = Vector2(35, 35)
+    c = Vector2(-35, -35)
+    d = Vector2(35, 35)
+    test_add(a, b, Vector2(60, 60))
+    test_add(c, d, Vector2(0, 0))
