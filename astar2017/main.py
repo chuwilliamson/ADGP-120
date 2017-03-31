@@ -1,16 +1,19 @@
 '''main file'''
+from random import randrange
 from steeringbehavioursgame import SteeringBehavioursGame
 from agent import Agent
 from vector import Vector2
-from random import random
+
+
 
 def main():
     '''main execution func'''
     game = SteeringBehavioursGame("SteeringBehaviours")
 
-    pos = (400, 400)
     for _ in range(10):
-        agent = Agent("agent", (0, 0), Vector2(random() * 400 + 50, random() * 400))
+        pos = Vector2(randrange(0, 800), randrange(0, 800))
+        vel = Vector2(1, 0)
+        agent = Agent("agent", pos, vel)
         game.addtobatch(agent)
     game.run()
 

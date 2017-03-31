@@ -86,3 +86,8 @@ class Game(object):
         """Center text in window"""
         surface = self.font.render(text, True, (0, 0, 0))
         self._screen.blit(surface, (25, 25))
+
+
+if __name__ == '__main__':
+    import main as Main
+    Main.main()

@@ -2,6 +2,7 @@
 '''File that handles the testing of the astar algorithm'''
 from AStar import AStarAlgorithm
 from AStar import Graph
+from astarwalle import astar
 #Usage documentation
 #all nodes must have a value that is of type string and be numbered from
 #0 - 99, where 0 = <0,0> 99 = <9, 9>

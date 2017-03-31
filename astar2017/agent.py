@@ -1,16 +1,13 @@
 '''agent.py'''
 import math
-from math import pi
+
 import random
-from random import randrange
-from random import random
 
 from gameobject import GameObject
 from vector import Vector2
 
 import pygame
-from constants import *
-import main as Main
+import constants
 
 
 class Agent(GameObject):
@@ -26,7 +23,7 @@ class Agent(GameObject):
         self._acceleration = Vector2(0, 0)
         self._mass = 1
         self._max_velocity = 50.0
-        self.wanderangle = 90.0
+        self.wanderangle = 45.0
         self._wanderforce = Vector2(0.0, 0.0)
 
     @property
@@ -56,17 +53,13 @@ class Agent(GameObject):
 
     def update(self, deltatime):
         '''agent update'''
-        self._force = Vector2(0, 0)
-        self.add_force(self.wander(2, 4) * 5)
-        self.add_force(self.seek())
+        self._force = self.seek() + self.wander(2, 4)
         self._acceleration = self.force
         self._velocity += self._acceleration * deltatime
 
-       # self.limit_velocity()
         self._position += self._velocity * deltatime
         self._direction = self._velocity.normalized
-        if self._position.distance(Vector2(400, 400)) > 400:
-            self._position = Vector2(400, 400)
+        super(Agent, self).update(deltatime)
 
     def limit_velocity(self):
         '''limit velocity'''
@@ -92,10 +85,11 @@ class Agent(GameObject):
 
         displacement = self._velocity.normalized
         displacement = displacement * radius
-        self.set_angle(displacement, self.wanderangle)
+        displacement.x = math.cos(self.wanderangle) * displacement.magnitude
+        displacement.y = math.sin(self.wanderangle) * displacement.magnitude
 
         angle_change = 1.0
-        self.wanderangle += random() * angle_change - angle_change * .5
+        self.wanderangle += random.random() * angle_change - angle_change * .5
         self._wanderforce = circlecenter + displacement
         return circlecenter + displacement
 
@@ -123,14 +117,17 @@ class Agent(GameObject):
         offset_forward = Vector2(center.x + self._forward.x * 25,
                                  center.y + self._forward.y * 25)
 
-        pygame.draw.line(screen, RED, center.value, offset_dir.value, 2)
-        pygame.draw.line(screen, GREEN, center.value, offset_upward.value, 2)
-        pygame.draw.line(screen, BLUE, center.value, offset_forward.value, 2)
-        pygame.draw.line(screen, BLACK, center.value, self._target.value, 1)
-        
-        offset_wander = Vector2(center.x + self._wanderforce.x, center.y + self._wanderforce.y)
-        pygame.draw.line(screen, BLACK, center.value,
-                         offset_wander.value, 1)
+        pygame.draw.line(screen, constants.RED,
+                         center.value, offset_dir.value, 2)
+        pygame.draw.line(screen, constants.GREEN,
+                         center.value, offset_upward.value, 2)
+        pygame.draw.line(screen, constants.BLUE, center.value,
+                         offset_forward.value, 2)
+
+        offset_wander = Vector2(
+            center.x + self._wanderforce.x * 10, center.y + self._wanderforce.y * 10)
+        pygame.draw.line(screen, constants.BLACK,
+                         center.value, offset_wander.value, 1)
 
         textpos = "Pos: <{0:.4} {1:.4}>".format(
             float(self._position.x), float(self._position.y))
@@ -143,22 +140,23 @@ class Agent(GameObject):
                            self._direction.x) * 180 / (math.pi)
         if angle < 0:
             angle = 360 + angle
-        textangle = "angle: {0}".format(self.wanderangle)
+        textangle = "Angle: {0}".format(self.wanderangle)
 
         surface = self.font.render(textpos, True, (0, 0, 0))
-        screen.blit(surface, (self._position.x, self._position.y + 75))
+        screen.blit(surface, (self._position.x, self._position.y + 50 + 0))
 
         surface = self.font.render(textdir, True, (0, 0, 0))
-        screen.blit(surface, (self._position.x, self._position.y + 75 + 15))
+        screen.blit(surface, (self._position.x, self._position.y + 50 + 10))
 
         surface = self.font.render(textangle, True, (0, 0, 0))
-        screen.blit(surface, (self._position.x, self._position.y + 75 + 30))
+        screen.blit(surface, (self._position.x, self._position.y + 50 + 20))
 
         surface = self.font.render(textwander, True, (0, 0, 0))
-        screen.blit(surface, (self._position.x, self._position.y + 75 + 45))
+        screen.blit(surface, (self._position.x, self._position.y + 50 + 30))
 
         super(Agent, self).draw(screen)
 
 
 if __name__ == '__main__':
+    import main as Main
     Main.main()

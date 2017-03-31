@@ -1,3 +1,6 @@
+from testing import Tester 
+
+
 class Node(object):
     '''node'''
 
@@ -86,10 +89,9 @@ def find_lowest(neighbors):
     '''get the lowest f score'''
     neighbors.sort(key=lambda x: x.f)
     return neighbors[0]
- 
 
 
-def astar(nodes, start, destination):
+def astar(start, destination):
     path = []
     current = start
     while current != destination:
@@ -106,20 +108,42 @@ def astar(nodes, start, destination):
         path.append(destination)
         return path
 
+    return [None]
+
 
 def main():
     '''main'''
-    a = Node('a', 0, 0)
-    b = Node('b', 1, 0)
-    c = Node('c', 1, 1)
-    d = Node('d', 0, 1)
-    e = Node('e', 2, 0)
-    nodes = [a, b, c, d, e]
+    tester = Tester()
+    tester.test(astar)
+
+    # graph = []
+    # index = 0
+    # for y in range(10):
+    #     for x in range(10):
+    #         name = str(index)
+    #         node = Node(name, x, y)
+    #         graph.append(node)
+    #         index += 1
+    # openlist = []
+    # closedlist = []
+    # start = graph[0]
+    # goal = graph[50]
+    # openlist.append(start)
+    # while openlist:
+    #     current = openlist[0]
+    #     print current
+    #     openlist.remove(current)
+    #     closedlist.append(current)
+    #     neighbors = get_neighbors(current, graph)
+    #     if goal in openlist:
+    #         print 'win'
+    #         break
+    #     for neighbor in neighbors:
+    #         if neighbor not in openlist:
+    #             openlist.append(neighbor)
 
     # tests to see if the astar function works
-    astartest = astar(nodes, a, e)
-    for i in astartest:
-        print i
+
 
 if __name__ == '__main__':
     main()
