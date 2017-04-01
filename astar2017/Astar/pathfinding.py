@@ -9,6 +9,7 @@ class Node(object):
         '''init'''
         self.guid = guid
         self.data = data
+        self.data.guid = guid
 
     def __str__(self):
         '''str'''
@@ -20,6 +21,7 @@ class Data(object):
 
     def __init__(self, position):
         '''init'''
+        self.guid = '00'
         self.pos = position
         self.h = 0
         self.g = 0
@@ -77,10 +79,9 @@ def retrace(goal):
     '''retrace'''
     current = goal
     path = []
-    path.append(current.data)
-    while current.data.parent != None:
-        current = current.data.parent
+    while current:
         path.append(current.data)
+        current = current.data.parent
 
     return path
 
@@ -97,11 +98,11 @@ def astar(start, goal, graph):
         current = openlist[0]
         openlist.remove(current)
         closedlist.append(current)
-        if goal in openlist:
+        if current == goal:
             path = retrace(current)
         neighbors = getneighbors(current, graph)
         for nay in neighbors:
-            if nay in closedlist or not nay.walkable:
+            if nay in closedlist or not nay.data.walkable:
                 continue
             tentative_g = nay.data.g + costtomove(current, nay)
             if nay not in openlist:
@@ -124,36 +125,40 @@ def main():
         for xpos in range(10):
             dat = Data((xpos, ypos))
             graph.append(Node(str(count), dat))
-        count += 1
-    count = 1
-    for i in graph:
-        if count % 10 == 0:
-            print i, '\n'
-        else:
-            print i,
-        count += 1
 
-    start = graph[0]
-    nays = getneighbors(start, graph)
-    print 'neighbors for ', start.guid, '@', start
-    for i in nays:
-        print i,
-    print '\n'
-    print 'manhattan test', graph[0], graph[99], manhattan(graph[0], graph[99])
+            count += 1
 
-    goal = graph[99]
+# test1
+    start = graph[43]
+    unwalkable = [35, 45, 55]
+    for i in unwalkable:
+        graph[i].data.walkable = False
+    goal = graph[47]
     result = astar(start, goal, graph)
     count = 1
     for i in graph:
         if count % 10 == 0:
             print i, '\n'
         elif i.data in result:
-            print '(->)',
+            print '(->) ',
+        elif not i.data.walkable:
+            print '(xx) ',
         else:
             print i,
         count += 1
+    expected = [47, 36, 25, 34, 44, 43]
+
+    print 'input', start.guid, 
+    print 'expected', expected
+    actualres = []
+    for i in result:
+        actualres.append(int(i.guid))
+    print 'actual  ', actualres
+    
+    # test2
 
 
+    
 
 if __name__ == '__main__':
     main()
