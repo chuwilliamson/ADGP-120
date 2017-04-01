@@ -1,12 +1,7 @@
 '''concrete game'''
-# pylint: disable=E1121
-# pylint: disable=E0401
-
-import math
 import pygame
+import constants
 from game import Game
-from vector import Vector2
-from constants import *
 
 
 class SteeringBehavioursGame(Game):
@@ -31,12 +26,10 @@ class SteeringBehavioursGame(Game):
                 keystate = pygame.key.get_pressed()
                 if keystate[pygame.constants.K_s]:
                     pass
+                if keystate[pygame.constants.K_d]:
+                    constants.DEBUG = not constants.DEBUG
             if event.type == pygame.MOUSEBUTTONDOWN:
-                for i in self._gameobjects:
-                    mousex = pygame.mouse.get_pos()[0]
-                    mousey = pygame.mouse.get_pos()[1]
-                    i.set_target((mousex, mousey))
-
+                pass
         for i in self._gameobjects:
             i.update(self._deltatime)
 
@@ -46,7 +39,6 @@ class SteeringBehavioursGame(Game):
         '''need documentation'''
         for i in self._gameobjects:
             i.draw(self._screen)
-
         super(SteeringBehavioursGame, self)._draw()
 
     def run(self):
@@ -55,3 +47,7 @@ class SteeringBehavioursGame(Game):
             while self.update():
                 self.draw()
         super(SteeringBehavioursGame, self)._shutdown()
+
+if __name__ == '__main__':
+    import main as Main
+    Main.main()

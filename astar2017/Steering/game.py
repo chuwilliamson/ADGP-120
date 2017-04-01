@@ -10,8 +10,7 @@ class Game(object):
     def __init__(self):
         '''abc'''
         self._name = ""
-        pygame.display.init()
-        pygame.font.init()
+        pygame.init()
         self._screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self._clock = pygame.time.Clock()
         self._fps = 30

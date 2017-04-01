@@ -93,13 +93,20 @@ class Vector2(object):
         return res
 
     def __mul__(self, other):
+        '''mult'''
         return Vector2(self.x * other, self.y * other)
 
     def __eq__(self, other):
+        '''=='''
         return self.x == other.x and self.y == other.y
 
     def __ne__(self, other):
+        '''!='''
         return self.x != other.x and self.y != other.y
+        
+    def intpos(self):
+        '''int pos'''
+        return Vector2(int(self.x), int(self.y))
 
 
 def test_add(a, b, result):
