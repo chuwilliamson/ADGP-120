@@ -1,13 +1,13 @@
-import root.graphrenderer.gameObject
+'''graphObject.py'''
 import pygame
-import root.graphrenderer.constants as constants
-
+from pygame import *
+from constants import *
 
 class GraphObject:
     def __init__(self, value, position = [0,0]):
         self.val = value
         self.pos = position
-        self.color = constants.BLUE
+        self.color = BLUE
 
     def update(self, dt):
         ''' For Inheritence'''
