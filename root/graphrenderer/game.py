@@ -36,9 +36,9 @@ class Game(object):
             if event.type == pygame.KEYDOWN:
                 keystate = pygame.key.get_pressed()
                 if keystate[pygame.constants.K_ESCAPE]:
-                    pygame.quit()
+                    return False
             if event.type == pygame.constants.QUIT:
-                pygame.quit()
+                return False
         for go in self.gameObjects:
             go.update(self._deltatime)
         return True
