@@ -2,9 +2,9 @@ Node: 0
  distance to Node: 0  == 0 
  distance to Node: 1  == 10 
  distance to Node: 2  == 0 
- distance to Node: 3  == 0 
+ distance to Node: 3  == 14 
  distance to Node: 4  == 10 
- distance to Node: 5  == 0 
+ distance to Node: 5  == 14 
  distance to Node: 6  == 0 
  distance to Node: 7  == 0 
  distance to Node: 8  == 0 
@@ -17,13 +17,13 @@ Node: 0
  distance to Node: 15  == 0 
 ===========================
 Node: 1 
- distance to Node: 0  == 0 
+ distance to Node: 0  == 10 
  distance to Node: 1  == 0 
  distance to Node: 2  == 10 
  distance to Node: 3  == 0 
  distance to Node: 4  == 0 
  distance to Node: 5  == 10 
- distance to Node: 6  == 0 
+ distance to Node: 6  == 14 
  distance to Node: 7  == 0 
  distance to Node: 8  == 0 
  distance to Node: 9  == 0 
@@ -36,13 +36,13 @@ Node: 1
 ===========================
 Node: 2 
  distance to Node: 0  == 0 
- distance to Node: 1  == 0 
+ distance to Node: 1  == 10 
  distance to Node: 2  == 0 
  distance to Node: 3  == 10 
  distance to Node: 4  == 0 
- distance to Node: 5  == 0 
+ distance to Node: 5  == 14 
  distance to Node: 6  == 10 
- distance to Node: 7  == 0 
+ distance to Node: 7  == 14 
  distance to Node: 8  == 0 
  distance to Node: 9  == 0 
  distance to Node: 10  == 0 
@@ -55,11 +55,11 @@ Node: 2
 Node: 3 
  distance to Node: 0  == 0 
  distance to Node: 1  == 0 
- distance to Node: 2  == 0 
+ distance to Node: 2  == 10 
  distance to Node: 3  == 0 
  distance to Node: 4  == 10 
  distance to Node: 5  == 0 
- distance to Node: 6  == 0 
+ distance to Node: 6  == 14 
  distance to Node: 7  == 10 
  distance to Node: 8  == 0 
  distance to Node: 9  == 0 
@@ -71,16 +71,16 @@ Node: 3
  distance to Node: 15  == 0 
 ===========================
 Node: 4 
- distance to Node: 0  == 0 
- distance to Node: 1  == 0 
+ distance to Node: 0  == 10 
+ distance to Node: 1  == 14 
  distance to Node: 2  == 0 
- distance to Node: 3  == 0 
+ distance to Node: 3  == 10 
  distance to Node: 4  == 0 
  distance to Node: 5  == 10 
  distance to Node: 6  == 0 
- distance to Node: 7  == 0 
+ distance to Node: 7  == 14 
  distance to Node: 8  == 10 
- distance to Node: 9  == 0 
+ distance to Node: 9  == 14 
  distance to Node: 10  == 0 
  distance to Node: 11  == 0 
  distance to Node: 12  == 0 
@@ -90,16 +90,16 @@ Node: 4
 ===========================
 Node: 5 
  distance to Node: 0  == 0 
- distance to Node: 1  == 0 
- distance to Node: 2  == 0 
+ distance to Node: 1  == 10 
+ distance to Node: 2  == 14 
  distance to Node: 3  == 0 
- distance to Node: 4  == 0 
+ distance to Node: 4  == 10 
  distance to Node: 5  == 0 
  distance to Node: 6  == 10 
  distance to Node: 7  == 0 
  distance to Node: 8  == 0 
  distance to Node: 9  == 10 
- distance to Node: 10  == 0 
+ distance to Node: 10  == 14 
  distance to Node: 11  == 0 
  distance to Node: 12  == 0 
  distance to Node: 13  == 0 
@@ -108,17 +108,17 @@ Node: 5
 ===========================
 Node: 6 
  distance to Node: 0  == 0 
- distance to Node: 1  == 0 
- distance to Node: 2  == 0 
- distance to Node: 3  == 0 
+ distance to Node: 1  == 14 
+ distance to Node: 2  == 10 
+ distance to Node: 3  == 14 
  distance to Node: 4  == 0 
- distance to Node: 5  == 0 
+ distance to Node: 5  == 10 
  distance to Node: 6  == 0 
  distance to Node: 7  == 10 
  distance to Node: 8  == 0 
- distance to Node: 9  == 0 
+ distance to Node: 9  == 14 
  distance to Node: 10  == 10 
- distance to Node: 11  == 0 
+ distance to Node: 11  == 14 
  distance to Node: 12  == 0 
  distance to Node: 13  == 0 
  distance to Node: 14  == 0 
@@ -127,15 +127,15 @@ Node: 6
 Node: 7 
  distance to Node: 0  == 0 
  distance to Node: 1  == 0 
- distance to Node: 2  == 0 
- distance to Node: 3  == 0 
+ distance to Node: 2  == 14 
+ distance to Node: 3  == 10 
  distance to Node: 4  == 0 
  distance to Node: 5  == 0 
- distance to Node: 6  == 0 
+ distance to Node: 6  == 10 
  distance to Node: 7  == 0 
  distance to Node: 8  == 10 
  distance to Node: 9  == 0 
- distance to Node: 10  == 0 
+ distance to Node: 10  == 14 
  distance to Node: 11  == 10 
  distance to Node: 12  == 0 
  distance to Node: 13  == 0 
@@ -146,17 +146,17 @@ Node: 8
  distance to Node: 0  == 0 
  distance to Node: 1  == 0 
  distance to Node: 2  == 0 
- distance to Node: 3  == 0 
- distance to Node: 4  == 0 
- distance to Node: 5  == 0 
+ distance to Node: 3  == 14 
+ distance to Node: 4  == 10 
+ distance to Node: 5  == 14 
  distance to Node: 6  == 0 
- distance to Node: 7  == 0 
+ distance to Node: 7  == 10 
  distance to Node: 8  == 0 
  distance to Node: 9  == 10 
  distance to Node: 10  == 0 
- distance to Node: 11  == 0 
+ distance to Node: 11  == 14 
  distance to Node: 12  == 10 
- distance to Node: 13  == 0 
+ distance to Node: 13  == 14 
  distance to Node: 14  == 0 
  distance to Node: 15  == 0 
 ===========================
@@ -166,16 +166,16 @@ Node: 9
  distance to Node: 2  == 0 
  distance to Node: 3  == 0 
  distance to Node: 4  == 0 
- distance to Node: 5  == 0 
- distance to Node: 6  == 0 
+ distance to Node: 5  == 10 
+ distance to Node: 6  == 14 
  distance to Node: 7  == 0 
- distance to Node: 8  == 0 
+ distance to Node: 8  == 10 
  distance to Node: 9  == 0 
  distance to Node: 10  == 10 
  distance to Node: 11  == 0 
  distance to Node: 12  == 0 
  distance to Node: 13  == 10 
- distance to Node: 14  == 0 
+ distance to Node: 14  == 14 
  distance to Node: 15  == 0 
 ===========================
 Node: 10 
@@ -184,17 +184,17 @@ Node: 10
  distance to Node: 2  == 0 
  distance to Node: 3  == 0 
  distance to Node: 4  == 0 
- distance to Node: 5  == 0 
- distance to Node: 6  == 0 
- distance to Node: 7  == 0 
+ distance to Node: 5  == 14 
+ distance to Node: 6  == 10 
+ distance to Node: 7  == 14 
  distance to Node: 8  == 0 
- distance to Node: 9  == 0 
+ distance to Node: 9  == 10 
  distance to Node: 10  == 0 
  distance to Node: 11  == 10 
  distance to Node: 12  == 0 
- distance to Node: 13  == 0 
+ distance to Node: 13  == 14 
  distance to Node: 14  == 10 
- distance to Node: 15  == 0 
+ distance to Node: 15  == 14 
 ===========================
 Node: 11 
  distance to Node: 0  == 0 
@@ -203,15 +203,15 @@ Node: 11
  distance to Node: 3  == 0 
  distance to Node: 4  == 0 
  distance to Node: 5  == 0 
- distance to Node: 6  == 0 
- distance to Node: 7  == 0 
+ distance to Node: 6  == 14 
+ distance to Node: 7  == 10 
  distance to Node: 8  == 0 
  distance to Node: 9  == 0 
- distance to Node: 10  == 0 
+ distance to Node: 10  == 10 
  distance to Node: 11  == 0 
  distance to Node: 12  == 10 
  distance to Node: 13  == 0 
- distance to Node: 14  == 0 
+ distance to Node: 14  == 14 
  distance to Node: 15  == 10 
 ===========================
 Node: 12 
@@ -222,15 +222,15 @@ Node: 12
  distance to Node: 4  == 0 
  distance to Node: 5  == 0 
  distance to Node: 6  == 0 
- distance to Node: 7  == 0 
- distance to Node: 8  == 0 
- distance to Node: 9  == 0 
+ distance to Node: 7  == 14 
+ distance to Node: 8  == 10 
+ distance to Node: 9  == 14 
  distance to Node: 10  == 0 
- distance to Node: 11  == 0 
+ distance to Node: 11  == 10 
  distance to Node: 12  == 0 
  distance to Node: 13  == 10 
  distance to Node: 14  == 0 
- distance to Node: 15  == 0 
+ distance to Node: 15  == 14 
 ===========================
 Node: 13 
  distance to Node: 0  == 0 
@@ -242,10 +242,10 @@ Node: 13
  distance to Node: 6  == 0 
  distance to Node: 7  == 0 
  distance to Node: 8  == 0 
- distance to Node: 9  == 0 
- distance to Node: 10  == 0 
+ distance to Node: 9  == 10 
+ distance to Node: 10  == 14 
  distance to Node: 11  == 0 
- distance to Node: 12  == 0 
+ distance to Node: 12  == 10 
  distance to Node: 13  == 0 
  distance to Node: 14  == 10 
  distance to Node: 15  == 0 
@@ -260,11 +260,11 @@ Node: 14
  distance to Node: 6  == 0 
  distance to Node: 7  == 0 
  distance to Node: 8  == 0 
- distance to Node: 9  == 0 
- distance to Node: 10  == 0 
- distance to Node: 11  == 0 
+ distance to Node: 9  == 14 
+ distance to Node: 10  == 10 
+ distance to Node: 11  == 14 
  distance to Node: 12  == 0 
- distance to Node: 13  == 0 
+ distance to Node: 13  == 10 
  distance to Node: 14  == 0 
  distance to Node: 15  == 10 
 ===========================
@@ -279,10 +279,10 @@ Node: 15
  distance to Node: 7  == 0 
  distance to Node: 8  == 0 
  distance to Node: 9  == 0 
- distance to Node: 10  == 0 
- distance to Node: 11  == 0 
+ distance to Node: 10  == 14 
+ distance to Node: 11  == 10 
  distance to Node: 12  == 0 
  distance to Node: 13  == 0 
- distance to Node: 14  == 0 
+ distance to Node: 14  == 10 
  distance to Node: 15  == 0 
 ===========================
