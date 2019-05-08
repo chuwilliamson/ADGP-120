@@ -1,3 +1,4 @@
+'''vec2.py'''
 
 class vec2:
     def __init__(self, x = 0, y = 0):
@@ -23,3 +24,5 @@ class vec2:
 
     def __str__(self):
         return str.format("x:%s, y:%s" % (self[0], self[1]))
+    
+

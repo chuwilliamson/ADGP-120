@@ -1,8 +1,7 @@
 '''freefunctions.py'''
 
 from math import sqrt
-def addvector(v1, v2):
-    return 
+
 def get_sqrmagnitude(vector):        
     return sum(list(map(lambda x : x * x, vector)))
 
