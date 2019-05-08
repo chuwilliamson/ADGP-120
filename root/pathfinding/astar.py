@@ -2,6 +2,7 @@
 '''Matthew Williamson 2019'''
 DIMS = 4
 
+
 class Node:
     def __init__(self, id_=None, value=None):
         self.id = id_
@@ -16,6 +17,17 @@ class Node:
     def __str__(self):
         return str.format("Node: %s " % self.id)
 
+def is_neighbor(nodeA, nodeB, graph = None):
+    right = nodeA.id + 1
+    up = nodeA.id + DIMS
+    left = nodeA.id - 1
+    down = nodeA.id - DIMS
+
+    cardinals = [right, up, left, down]  # up down left and right
+    # use the up down left and right
+    diagonals = [up + 1, up - 1, down + 1, down - 1]
+
+    return nodeB in cardinals or nodeB in diagonals
 
 def dist_between(nodeA, nodeB, graph=None):
     ''' calculate the distance between two nodes'''
@@ -29,17 +41,17 @@ def dist_between(nodeA, nodeB, graph=None):
     cardinals = [right, up, left, down]  # up down left and right
     # use the up down left and right
     diagonals = [up + 1, up - 1, down + 1, down - 1]
-    
-    for d in diagonals: 
+
+    for d in diagonals:
         notdiagonal = d % 4 == 0 or d < 0
-        if notdiagonal: diagonals.remove(d)
+        if notdiagonal:
+            diagonals.remove(d)
 
     if nodeB.id in cardinals:
         result = 10
     if nodeB.id in diagonals:
         result = 14
     return result
-
 
 def get_neighbors(node, graph=None):
     '''get neighbors of a node'''
@@ -59,7 +71,11 @@ def manhattan_distance(nodeA, nodeB, graph=None):
 
 
 def reconstruct_path(nodeA, nodeB):
-    return []
+    current = nodeB
+    result = []
+    while current.parent != None:
+        current = current.parent
+    return result
 
 
 def astar(start, goal, heuristic):
@@ -94,7 +110,7 @@ class Program:
         count = 0
         for i in range(0, DIMS):
             for j in range(0, DIMS):
-                nodes_.append(Node(id_=count, value=(i, j)))
+                nodes_.append(Node(id_=str.format("%s, (%s,%s)"% (count,i,j)), value=(i, j)))
                 count += 1
         self.nodes = nodes_
 
@@ -135,9 +151,6 @@ def test_distance(nodes):  # done
     return resultstr
 
 
-
-
-
 def test_neighbors(nodes):
     resultstr = ''
     for i in nodes:
@@ -146,6 +159,7 @@ def test_neighbors(nodes):
         resultstr += "neighbors: " + str_list(neighbors)
         resultstr += "\n===========================\n"
     return resultstr
+
 
 p = Program()
 p.run()
